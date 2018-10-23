@@ -1,0 +1,24 @@
+node_modules
+package-lock.json
+
+# chain local data
+app.db
+chaindata
+build
+nohup.out
+getip.json
+genesis.json
+
+# Gateway server
+solvedBlockNumber
+
+gateway-all.log
+gateway-err.log
+gateway-out.log
+
+main-all.log
+main-err.log
+main-out.log
+loom-all.log
+loom-err.log
+loom-out.log
