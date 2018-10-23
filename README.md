@@ -1,4 +1,4 @@
-# Legend Heroez
+# Transfer Gateway
 
 ## 1 Required
 Prepare first time:
