@@ -27,20 +27,23 @@ contract HrTest is Ownable {
     Option[] public options;
 
     mapping(uint => address) quizIdToOwner;
-
     mapping(uint => mapping(address => bool)) quizIdToUser;
     mapping(uint => address[]) quizIdToUsersList;
-
     mapping(uint => uint[]) quizIdToQuestionIds;
     mapping(uint => uint[]) questionIdToOptionIds;
     mapping(uint => uint) questionIdToStartTime;
     mapping(uint => uint) private questionIdToCorrectOption;
     mapping(uint => mapping(address => bool)) questionIdToUserSubmited;
     mapping(uint => mapping(address => uint)) quizIdToUserScore;
+    mapping(uint => mapping(address => uint)) quizIdToUserReward;
     mapping(uint => uint) quizIdToQuestionCount;
 
     event SubmitAnswer(uint questionId, bool isCorrect, uint score);
     event GetReward(address user, uint reward);
+    event CreateQuiz(uint quizId);
+    event NextQuestion(uint currentQuestion);
+    event QuizComplete(uint _quizId);
+    event JoinQuiz(uint _quizId, address user);
 
     /**
      * Set tene coin address
@@ -51,7 +54,6 @@ contract HrTest is Ownable {
         teneCoinContract = TeneCoin(teneAddress);
     }
 
-    event CreateQuiz(uint quizId);
     function createQuiz(string _quizName) public {
         uint _quizId = quizs.push(Quiz(_quizName, false, 0)) - 1;
         emit CreateQuiz(_quizId);
@@ -61,12 +63,12 @@ contract HrTest is Ownable {
     function createQuestion(
         uint _quizId,
         uint _timeLimit,
+        uint _correctOption,
         string _questionText,
         string _option1,
         string _option2,
         string _option3,
-        string _option4,
-        uint _correctOption
+        string _option4
     ) public {
         require(quizIdToOwner[_quizId] == msg.sender, "Don't have access.");
 
@@ -90,20 +92,28 @@ contract HrTest is Ownable {
         quizIdToQuestionCount[_quizId]++;
     }
 
-    event NextQuestion(uint currentQuestion);
-    event QuizComplete(uint _quizId);
+
     function nextQuestion(uint _quizId) public {
         require(quizIdToOwner[_quizId] == msg.sender, "Don't have access.");
 
         if (quizs[_quizId].currentQuestion < quizIdToQuestionIds[_quizId].length) {
-            uint _index = quizs[_quizId].currentQuestion;
-            uint _questionId = quizIdToQuestionIds[_quizId][_index];
-            require(questions[_questionId].timeStart + questions[_questionId].timeLimit < now, "Question not done!");
+            
+            // Set startTime for currentQuestion
+            uint _currentQuestion = quizs[_quizId].currentQuestion;
+            uint _currentQuestionId = quizIdToQuestionIds[_quizId][_currentQuestion];
+            questions[_currentQuestionId].timeStart = now;
 
+            // Check valid time of previous question
+            if(_currentQuestion > 0) {
+                uint _previousQuestionId = quizIdToQuestionIds[_quizId][_currentQuestion - 1];
+                require(questions[_previousQuestionId].timeStart + questions[_previousQuestionId].timeLimit < now, "Question not done!");
+            }
+
+            // Next question
             quizs[_quizId].currentQuestion++;
             emit NextQuestion(quizs[_quizId].currentQuestion);
-            questions[_questionId].timeStart = now;
         } else {
+            quizs[_quizId].completed = true;
             emit QuizComplete(_quizId); // Last answer and show result
             
             // Loop list user in quiz
@@ -113,13 +123,13 @@ contract HrTest is Ownable {
                 if(quizIdToUserScore[_quizId][_user] * modulus > quizIdToQuestionCount[_quizId] * modulus * 50 / 100) {
                     uint _reward = 100 * modulus;
                     // teneCoinContract.earn(msg.sender, _reward);
+                    quizIdToUserReward[_quizId][_user] = _reward;
                     emit GetReward(_user, _reward);
                 }
             }
         }
     }
 
-    event JoinQuiz(uint _quizId, address user);
     function joinQuiz(uint _quizId) public {
         if(quizIdToUser[_quizId][msg.sender] != true) {
             quizIdToUser[_quizId][msg.sender] = true;
@@ -128,15 +138,10 @@ contract HrTest is Ownable {
         emit JoinQuiz(_quizId, msg.sender);
     }
 
-    // event TimesUp();
-    // function timesUp() public {
-    //     emit TimesUp();
-    // }
-
     function submitAnswer(uint _quizId, uint _questionId, uint _correctOption) public {
         require(quizIdToUser[_quizId][msg.sender] == true, "User have not joined.");
-        uint _index = quizs[_quizId].currentQuestion;
-        require(_questionId == quizIdToQuestionIds[_quizId][_index - 1], "Wrong question index.");
+        uint _currentQuestion = quizs[_quizId].currentQuestion;
+        require(_questionId == quizIdToQuestionIds[_quizId][_currentQuestion - 1], "Wrong question index.");
         require(questions[_questionId].timeStart + questions[_questionId].timeLimit >= now);
 
         // Prevent re-answer
@@ -153,22 +158,32 @@ contract HrTest is Ownable {
         emit SubmitAnswer(_questionId, isCorrect, quizIdToUserScore[_quizId][msg.sender]);
     }
 
-    function getQuizsList() public view returns (uint) {
-        return quizs.length;
-    }
-
     function getQuizUsersList(uint _quizId) public view returns (address[]) {
         return quizIdToUsersList[_quizId];
     }
 
-    function getQuizQuestions(uint _quizId) public view returns (uint[]) {
-        return quizIdToQuestionIds[_quizId];
+    function getQuizUserScore(uint _quizId, address _user) public view returns (uint) {
+        return quizIdToUserScore[_quizId][_user];
     }
 
-    function getQuestionOptions(uint _questionId) public view returns (uint[]) {
-        return questionIdToOptionIds[_questionId];
+    function getQuizUserReward(uint _quizId, address _user) public view returns (uint) {
+        return quizIdToUserReward[_quizId][_user];
     }
 
+    function getCurrentQuestionId(uint _quizId) public view returns (uint) {
+        uint _currentQuestion = quizs[_quizId].currentQuestion;
+        if(_currentQuestion > 0) {
+            uint _currentQuestionId = quizIdToQuestionIds[_quizId][_currentQuestion - 1];
+            return _currentQuestionId;
+        }
+    }
 
+    function getCurrentOptionIds(uint _quizId) public view returns (uint[]) {
+        uint _currentQuestion = quizs[_quizId].currentQuestion;
+        if(_currentQuestion > 0) {
+            uint _currentQuestionId = quizIdToQuestionIds[_quizId][_currentQuestion - 1];
+            return questionIdToOptionIds[_currentQuestionId];
+        }
+    }
 
 }

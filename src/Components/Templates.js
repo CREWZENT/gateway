@@ -21,7 +21,87 @@ class DefaultName extends Component {
             option3: "Here is the option 3",
             option4: "Here is the option 4",
             correctOption: 2,
-            quizsList: []
+
+            quizsList: [
+                {
+                    name: "Name of the template 1",
+                    questionsList: [
+                        {
+                            timeLimit: 5,
+                            correctOption: 2,
+                            name: "What do you want to ask 1?",
+                            optionsList: [
+                                { name: "Here is the option 1 of question 1" },
+                                { name: "Here is the option 2 of question 1" },
+                                { name: "Here is the option 3 of question 1" },
+                                { name: "Here is the option 4 of question 1" },
+                            ]
+                        },
+                        {
+                            timeLimit: 5,
+                            correctOption: 2,
+                            name: "What do you want to ask 2?",
+                            optionsList: [
+                                { name: "Here is the option 1 of question 2" },
+                                { name: "Here is the option 2 of question 2" },
+                                { name: "Here is the option 3 of question 2" },
+                                { name: "Here is the option 4 of question 2" },
+                            ]
+                        },
+                        {
+                            timeLimit: 5,
+                            correctOption: 2,
+                            name: "What do you want to ask 3?",
+                            optionsList: [
+                                { name: "Here is the option 1 of question 3" },
+                                { name: "Here is the option 2 of question 3" },
+                                { name: "Here is the option 3 of question 3" },
+                                { name: "Here is the option 4 of question 3" },
+                            ]
+                        }
+
+                    ]
+                },
+                {
+                    name: "Name of the template 2",
+                    questionsList: [
+                        {
+                            timeLimit: 5,
+                            correctOption: 2,
+                            name: "What do you want to ask 1?",
+                            optionsList: [
+                                { name: "Here is the option 1 of question 1" },
+                                { name: "Here is the option 2 of question 1" },
+                                { name: "Here is the option 3 of question 1" },
+                                { name: "Here is the option 4 of question 1" },
+                            ]
+                        },
+                        {
+                            timeLimit: 5,
+                            correctOption: 2,
+                            name: "What do you want to ask 2?",
+                            optionsList: [
+                                { name: "Here is the option 1 of question 2" },
+                                { name: "Here is the option 2 of question 2" },
+                                { name: "Here is the option 3 of question 2" },
+                                { name: "Here is the option 4 of question 2" },
+                            ]
+                        },
+                        {
+                            timeLimit: 5,
+                            correctOption: 2,
+                            name: "What do you want to ask 3?",
+                            optionsList: [
+                                { name: "Here is the option 1 of question 3" },
+                                { name: "Here is the option 2 of question 3" },
+                                { name: "Here is the option 3 of question 3" },
+                                { name: "Here is the option 4 of question 3" },
+                            ]
+                        }
+
+                    ]
+                }
+            ]
         }
 
         this.changeQuizId = this.changeQuizId.bind(this);
@@ -35,64 +115,55 @@ class DefaultName extends Component {
     }
 
     componentDidMount() {
-        this.getQuizsList();
+
     }
 
+    async createQuiz(quiz) {
+        const { state } = this.props;
+        const tx = await state.HrTest.methods.createQuiz(quiz.name).send();
+        console.log(tx);
+
+        if (tx.blockHash) {
+            const quizId = tx.events.CreateQuiz.returnValues.quizId;
+            this.createQuestion(quizId, quiz);
+        }
+    }
 
     /**
      * Create card
      */
-    async createQuestion() {
+    async createQuestion(quizId, quiz) {
         const { state } = this.props;
-        const {quizId, quizName, questionText, option1, option2, option3, option4, correctOption} = this.state;
-        
-        const tx1 = await state.HrTest.methods.createQuestion(
-            quizId,
-            quizName,
-            questionText,
-            option1,
-            option2,
-            option3,
-            option4,
-            correctOption
-        ).send();
+        let error = false;
+        for (let i = 0; i < quiz.questionsList.length; i++) {
+            const question = quiz.questionsList[i];
+            const questionName = question.name;
 
-        console.log(tx1);
-    }
+            const option1 = question.optionsList[0].name;
+            const option2 = question.optionsList[1].name;
+            const option3 = question.optionsList[2].name;
+            const option4 = question.optionsList[3].name;
 
-    /**
-     * Get card list
-     */
-    async getQuizsList() {
-        const { state } = this.props;
-        const quizsLength = await state.HrTest.methods.getQuizsList().call();
-        let quizsList = [];
-        for (let x = 0; x < quizsLength; x++) {
-            const quiz = {};
-
-            quiz.id = x;
-            quiz.name = await state.HrTest.methods.quizs(x).call();
-            const questionIds = await state.HrTest.methods.getQuizQuestions(x).call();
-            quiz.questionsList = [];
-            for (let y = 0; y < questionIds.length; y++) {
-                const question = {};
-                question.id = questionIds[y];
-                question.name = await state.HrTest.methods.questions(question.id).call();
-                const optionIds = await state.HrTest.methods.getQuestionOptions(question.id).call();
-                question.optionsList = [];
-                for (let z = 0; z < optionIds.length; z++) {
-                    const option = {};
-                    option.id = optionIds[z];
-                    
-                    option.name = await state.HrTest.methods.options(option.id).call();
-                    question.optionsList.push(option);
-                }
-                quiz.questionsList.push(question);
+            const tx = await state.HrTest.methods.createQuestion(
+                quizId,
+                question.timeLimit,
+                question.correctOption,
+                questionName,
+                option1,
+                option2,
+                option3,
+                option4,
+            ).send();
+            console.log(tx);
+            if(!tx.blockHash) {
+                error = true;
             }
-            quizsList.push(quiz);
         }
-        this.setState({ quizsList });
+        if(error === false) {
+            window.location = `/board/${quizId}`;
+        }
     }
+
 
     /**
      * Handle input change
@@ -126,7 +197,7 @@ class DefaultName extends Component {
 
         return (
             <div className="admin container">
-                <div className="row">
+                {/* <div className="row">
                     <div className="col-3"></div>
                     <div className="col-6">
                         <h1 className="mt-3 text-center">Create Test</h1>
@@ -170,20 +241,19 @@ class DefaultName extends Component {
                         </form>
                     </div>
                     <div className="col-3"></div>
-                </div>
+                </div> */}
 
                 <div className="row">
                     <div className="col">
                         <hr />
-                        <h1>Card list</h1>
+                        <h1>Quiz list</h1>
 
                         <div>
                             {
                                 this.state.quizsList.map((quiz, x) => {
                                     return (
-                                        <div key={x} className="card">
-                                            <h5>QuizId: {quiz.id}</h5>
-                                            QuizName: {quiz.name}
+                                        <div key={x} className="card mt-5" onClick={() => this.createQuiz(quiz)}>
+                                            <h5>QuizName: {quiz.name}</h5>
                                             <div>
                                                 {
                                                     quiz.questionsList.map((question, y) => {
@@ -194,7 +264,7 @@ class DefaultName extends Component {
                                                                     {
                                                                         question.optionsList.map((option, z) => {
                                                                             return (
-                                                                                <div key={z}>
+                                                                                <div key={z} style={{ 'background': z === question.correctOption ? '#f1f1f1' : "" }}>
                                                                                     {option.name}
                                                                                 </div>
                                                                             )

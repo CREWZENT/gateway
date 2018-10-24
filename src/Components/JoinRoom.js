@@ -20,7 +20,7 @@ class DefaultName extends Component {
         }
 
         this.changeQuizId = this.changeQuizId.bind(this);
-        this.joinRoom = this.joinRoom.bind(this);
+        this.joinQuiz = this.joinQuiz.bind(this);
     }
 
     componentDidMount() {
@@ -50,8 +50,15 @@ class DefaultName extends Component {
         this.setState({ quizId: e.target.value });
     }
 
-    joinRoom() {
-        window.location = `/playing/${this.state.quizId}`;
+    async joinQuiz() {
+        const { state } = this.props;
+        const tx = await state.HrTest.methods.joinQuiz(
+            this.state.quizId
+        ).send();
+        if(tx.blockHash) {
+            console.log(tx);
+            window.location = `/playing/${this.state.quizId}`;
+        }
     }
 
     render() {
@@ -84,9 +91,9 @@ class DefaultName extends Component {
                         <form onSubmit={(e) => e.preventDefault()}>
                             <div className="form-group">
                                 <label>Join Room</label>
-                                <input type="number" className="form-control" placeholder="RoomId" value={this.state.quizId} onChange={this.changeQuizId} />
+                                <input type="number" className="form-control" placeholder="quizId" value={this.state.quizId} onChange={this.changeQuizId} />
                             </div>
-                            <button className="btn btn-success m-2" onClick={() => this.joinRoom()}>Join Room</button>
+                            <button className="btn btn-success m-2" onClick={() => this.joinQuiz()}>Join Room</button>
                         </form>
                     </div>
 

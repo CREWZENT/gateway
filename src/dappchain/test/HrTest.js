@@ -30,14 +30,14 @@ contract('HrTest', async (accounts) => {
     });
 
     it('Should create question', async () => {
-        await hrTest.createQuestion(0, 3, "This is question 1",
-        "Question 1 - Answer 1", "Question 1 - Answer 2", "Question 1 - Answer Answer 3", "Question 1 - Answer Answer 4", 2);
+        await hrTest.createQuestion(0, 3, 2, "This is question 1",
+        "Question 1 - Answer 1", "Question 1 - Answer 2", "Question 1 - Answer Answer 3", "Question 1 - Answer Answer 4");
 
-        await hrTest.createQuestion(0, 3, "This is question 2",
-        "Question 2 - Answer 1", "Question 2 - Answer 2", "Question 2 - Answer Answer 3", "Question 2 - Answer Answer 4", 2);
+        await hrTest.createQuestion(0, 3, 2, "This is question 2",
+        "Question 2 - Answer 1", "Question 2 - Answer 2", "Question 2 - Answer Answer 3", "Question 2 - Answer Answer 4");
 
-        await hrTest.createQuestion(0, 3, "This is question 3",
-        "Question 3 - Answer 1", "Question 3 - Answer 2", "Question 3 - Answer Answer 3", "Question 3 - Answer Answer 4", 2);
+        await hrTest.createQuestion(0, 3, 2, "This is question 3",
+        "Question 3 - Answer 1", "Question 3 - Answer 2", "Question 3 - Answer Answer 3", "Question 3 - Answer Answer 4");
 
         const question1 = await hrTest.questions(0);
         const question2 = await hrTest.questions(1);

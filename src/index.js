@@ -25,8 +25,13 @@ const Menu = Loadable({
   loading: Loading
 });
 
-const CreateRoom = Loadable({
-  loader: () => import('./Components/CreateRoom'),
+const Templates = Loadable({
+  loader: () => import('./Components/Templates'),
+  loading: Loading
+});
+
+const Board = Loadable({
+  loader: () => import('./Components/Board'),
   loading: Loading
 });
 
@@ -189,7 +194,7 @@ class Root extends Component {
         web3js = new Web3(web3.currentProvider);
         setInterval(() => {
           web3js.eth.getAccounts((err, accounts) => {
-            if(!accounts[0]) {
+            if (!accounts[0]) {
               mainAddress = accounts[0];
               dispatch({ type: 'changeUser', data: { ...state.user, mainAddress: 2 } });
             }
@@ -277,17 +282,23 @@ class Root extends Component {
           }
 
           <Switch>
+
             {
               state.user && state.user.mainAddress && state.user.mainAddress.toString().length > 1 &&
-              <Route path="/create" component={CreateRoom} />
+              <Route path="/templates" component={Templates} />
+            }
+
+            {
+              state.user && state.user.mainAddress && state.user.mainAddress.toString().length > 1 &&
+              <Route path="/board/:quizId" component={Board} />
             }
             {
               state.user && state.user.mainAddress && state.user.mainAddress.toString().length > 1 &&
-              <Route path="/playing/:roomId" component={Playing} />
+              <Route path="/playing/:quizId" component={Playing} />
             }
             {
-              ((state.user && state.user.mainAddress !== undefined) || state.user === false) && 
-                <Route key="0" component={JoinRoom} />
+              ((state.user && state.user.mainAddress !== undefined) || state.user === false) &&
+              <Route key="0" component={JoinRoom} />
             }
           </Switch>
         </div>

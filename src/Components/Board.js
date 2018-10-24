@@ -22,7 +22,6 @@ class DefaultName extends Component {
       quizId: props.match.params.quizId,
       completed: false,
       currentQuestion: 0,
-      currentQuestionId: 0,
       quizName: "",
       questionText: "",
       questionTimeLimit: 0,
@@ -37,24 +36,12 @@ class DefaultName extends Component {
     const { state } = this.props;
 
     this.getQuestionDetail();
-    state.HrTest.events.NextQuestion({}, (err, event) => {
-      console.log(event);
-      this.setState({ resultShowing: false });
-      this.getQuestionDetail();
-    });
-
-    state.HrTest.events.QuizComplete({}, (err, event) => {
-      console.log(event);
-      this.showResult();
-      this.setState({ completed: true });
-    });
 
     state.HrTest.events.JoinQuiz({}, (err, event) => {
       console.log(event);
       this.showResult();
     });
   }
-
 
   /**
    * Get card list
@@ -65,11 +52,10 @@ class DefaultName extends Component {
     const quiz = await state.HrTest.methods.quizs(this.state.quizId).call();
     this.setState({ completed: quiz.completed, currentQuestion: Number(quiz.currentQuestion), quizName: quiz.name });
 
-    if (quiz.currentQuestion > 0) {
+    if (this.state.currentQuestion > 0) {
       const questionId = await state.HrTest.methods.getCurrentQuestionId(quizId).call();
       const questionTx = await state.HrTest.methods.questions(questionId).call();
       this.setState({
-        currentQuestionId: questionId,
         questionText: questionTx.questionText,
         questionTimeLimit: questionTx.timeLimit,
         questionTimeStart: questionTx.timeStart
@@ -93,17 +79,28 @@ class DefaultName extends Component {
     }
   }
 
-  async submitAnswer(choosedOption) {
 
+  async nextQuestion(quizId) {
     const { state } = this.props;
-    const { quizId, currentQuestionId } = this.state;
-    const tx = await state.HrTest.methods.submitAnswer(quizId, currentQuestionId, choosedOption).send();
+
+    const tx = await state.HrTest.methods.nextQuestion(quizId).send();
     console.log(tx);
+
+    if (tx.blockHash) {
+      if (tx.events.NextQuestion) {
+        this.setState({ currentQuestion: tx.events.NextQuestion.returnValues.currentQuestion });
+        this.getQuestionDetail();
+      } else if (tx.events.QuizComplete) {
+        this.showResult();
+        this.setState({ completed: true });
+      }
+    }
+
+    this.setState({ resultShowing: false });
   }
 
   async showResult() {
     console.log("Show result");
-
     const { state } = this.props;
     const { quizId } = this.state;
 
@@ -129,18 +126,22 @@ class DefaultName extends Component {
       quizUsersList.push(quizUser)
     }
 
+
     this.setState({ resultShowing: true, quizUsersList });
+    console.log(quizUsersList);
   }
 
   render() {
     const { state } = this.props;
-    const { resultShowing, quizUsersList, completed, currentQuestion, questionText, questionTimeLimit, optionsList } = this.state;
+    const { resultShowing, quizId, quizUsersList, completed, currentQuestion, quizName, questionText, questionTimeLimit, optionsList } = this.state;
     return (
       <div className="admin container">
         <div className="row">
           <div className="col">
 
             <div className="card">
+              <h1>Room Id: {quizId}</h1>
+              <p>QuizName: {quizName}</p>
               {
                 completed && 'Completed'
               }
@@ -163,30 +164,32 @@ class DefaultName extends Component {
                 !completed &&
                 <div>
                   {
+                    resultShowing &&
+                    <button className="btn btn-outline-info" onClick={() => this.nextQuestion(quizId)}>{currentQuestion === 0 ? "Start" : "Next"}</button>
+                  }
+
+                  {
                     currentQuestion > 0 && !resultShowing &&
                     <div>
-                      Question: {questionText} | Time Left: {questionTimeLimit}
+                      <p>CurrentQuestion: {currentQuestion}</p>
+                      Question: {questionText} | Time Limit: {questionTimeLimit}
                       <div>
                         {
                           optionsList.map((option, z) => {
                             return (
                               <div key={z}>
-                                <button className="btn btn-outline-success" onClick={() => this.submitAnswer(z)}>
-                                  {option.name}
-                                </button>
-
+                                {option.name}
                               </div>
                             )
                           })
                         }
 
                       </div>
+
                     </div>
                   }
                 </div>
               }
-
-
             </div>
 
           </div>
