@@ -19,10 +19,6 @@ class DefaultName extends Component {
                         <div className="card-body">
                             <h3 className="card-title">MetaMask TestNet Requirement</h3>
                             <hr/>
-                            {
-                                !state.user &&
-                                <a className="btn btn-info mt-3 px-4" onClick={() => this.signIn()}>Facebook Login</a>
-                            }
 
                             {
                                 state.user.mainAddress === 0 &&

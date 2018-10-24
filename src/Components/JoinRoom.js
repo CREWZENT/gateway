@@ -63,6 +63,22 @@ class DefaultName extends Component {
                     <MetaMask />
                 }
                 {
+                    state.user === false &&
+                    <div className="row mt-3">
+                        <div className="col-sm-3"></div>
+                        <div className="col-sm-6">
+                            <div className="card">
+                                <div className="card-body">
+                                    <h3 className="card-title">Facebook Login Requirement</h3>
+                                    <hr />
+                                    You haven't logged in.
+                                    </div>
+                            </div>
+                        </div>
+                        <div className="col-sm-3"></div>
+                    </div>
+                }
+                {
                     (state.user.mainAddress && state.user.mainAddress.toString().length > 1) &&
                     <div>
                         <form onSubmit={(e) => e.preventDefault()}>

@@ -1,5 +1,6 @@
 const HrTest = artifacts.require('HrTest');
 const TeneCoin = artifacts.require('TeneCoin');
+const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 contract('HrTest', async (accounts) => {
     let teneCoin;
@@ -21,32 +22,79 @@ contract('HrTest', async (accounts) => {
     })
 
     it('Should create quiz', async () => {
-        await hrTest.createQuestion(0, "Quiz 1", "This is question 1",
+        await hrTest.createQuiz("Quiz 1");
+        const quiz = await hrTest.quizs(0);
+        assert.equal("Quiz 1", quiz[0]);
+        assert.equal(false, quiz[1]);
+        assert.equal(0, quiz[2].toNumber());
+    });
+
+    it('Should create question', async () => {
+        await hrTest.createQuestion(0, 3, "This is question 1",
         "Question 1 - Answer 1", "Question 1 - Answer 2", "Question 1 - Answer Answer 3", "Question 1 - Answer Answer 4", 2);
 
-        await hrTest.createQuestion(0, "Quiz 1", "This is question 2",
+        await hrTest.createQuestion(0, 3, "This is question 2",
         "Question 2 - Answer 1", "Question 2 - Answer 2", "Question 2 - Answer Answer 3", "Question 2 - Answer Answer 4", 2);
 
-        await hrTest.createQuestion(0, "Quiz 1", "This is question 3",
+        await hrTest.createQuestion(0, 3, "This is question 3",
         "Question 3 - Answer 1", "Question 3 - Answer 2", "Question 3 - Answer Answer 3", "Question 3 - Answer Answer 4", 2);
 
-        assert.equal("Quiz 1", await hrTest.quizs(0));
-        assert.equal("This is question 1",  await hrTest.questions(0));
+        const question1 = await hrTest.questions(0);
+        const question2 = await hrTest.questions(1);
+        const question3 = await hrTest.questions(2);
+        assert.equal("This is question 1",  question1[0]);
+        assert.equal("This is question 2",  question2[0]);
+        assert.equal("This is question 3",  question3[0]);
     });
 
-    it('Submit answer', async () => {
-        const tx1 = await hrTest.submitAnswer(0, 0, 2);
+    it("Should join room", async () => {
+        await hrTest.joinQuiz(0, { from: accounts[1] });
+        // assert.equal(true, await hrTest.quizIdToUser.call(0, accounts[1]))
+    });
+
+    it("Should nextQuestion 1", async () => {
+        await hrTest.nextQuestion(0, { from: accounts[0] });
+        let quiz = await hrTest.quizs(0);
+        assert.equal(1, quiz[2].toNumber()); // currentQuestion = 1
+    });
+
+    it('Submit answer 1', async () => {
+        const tx1 = await hrTest.submitAnswer(0, 0, 2, { from: accounts[1] });
         assert.equal(0, tx1.logs[0].args.questionId.toNumber());
         assert.equal(true, tx1.logs[0].args.isCorrect);
+    });
 
-        const tx2 = await hrTest.submitAnswer(0, 1, 2);
+    it("Should nextQuestion 2", async () => {
+        await snooze(5000);
+        await hrTest.nextQuestion(0, { from: accounts[0] });
+        quiz = await hrTest.quizs(0);
+        assert.equal(2, quiz[2].toNumber()); // currentQuestion = 2
+    });
+
+    it('Submit answer 2', async () => {
+        const tx2 = await hrTest.submitAnswer(0, 1, 2, { from: accounts[1] });
         assert.equal(1, tx2.logs[0].args.questionId.toNumber());
         assert.equal(true, tx2.logs[0].args.isCorrect);
+    });
 
-        const tx3 = await hrTest.submitAnswer(0, 2, 1);
+    it("Should nextQuestion 3", async () => {
+        await snooze(5000);
+        await hrTest.nextQuestion(0, { from: accounts[0] });
+        quiz = await hrTest.quizs(0);
+        assert.equal(3, quiz[2].toNumber()); // currentQuestion = 3
+    });
+
+    it('Submit answer 3', async () => {
+        const tx3 = await hrTest.submitAnswer(0, 2, 1, { from: accounts[1] });
         assert.equal(2, tx3.logs[0].args.questionId.toNumber());
         assert.equal(false, tx3.logs[0].args.isCorrect);
-        
-        assert.equal(100*10**18, tx3.logs[1].args.reward.toNumber());
     });
+
+    it("Should nextQuestion 4", async () => {
+        await snooze(5000);
+        const tx = await hrTest.nextQuestion(0, { from: accounts[0] });
+        quiz = await hrTest.quizs(0);
+        assert.equal(3, quiz[2].toNumber()); // currentQuestion = 3
+    });
+
 })
