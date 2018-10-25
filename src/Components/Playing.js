@@ -27,9 +27,11 @@ class DefaultName extends Component {
       questionText: "",
       questionTimeLimit: 0,
       questionTimeStart: 0,
+      questionTimeLeft: 0,
       optionsList: [],
       showResult: false,
-      quizUsersList: []
+      quizUsersList: [],
+      submited: false
     }
   }
 
@@ -39,7 +41,7 @@ class DefaultName extends Component {
     this.getQuestionDetail();
     state.HrTest.events.NextQuestion({}, (err, event) => {
       console.log(event);
-      this.setState({ showResult: false });
+      this.setState({ showResult: false, submited: false });
       this.getQuestionDetail();
     });
 
@@ -68,11 +70,17 @@ class DefaultName extends Component {
     if (quiz.currentQuestion > 0) {
       const questionId = await state.HrTest.methods.getCurrentQuestionId(quizId).call();
       const questionTx = await state.HrTest.methods.questions(questionId).call();
+      const serverTime = await state.HrTest.methods.getServerTime().call();
+      const submited = await state.HrTest.methods.checkUserSubmited(questionId).call();
+      
+      questionTx.questionTimeLeft = questionTx.timeLimit - (serverTime - questionTx.timeStart);
       this.setState({
         currentQuestionId: questionId,
         questionText: questionTx.questionText,
         questionTimeLimit: questionTx.timeLimit,
-        questionTimeStart: questionTx.timeStart
+        questionTimeStart: questionTx.timeStart,
+        questionTimeLeft: questionTx.questionTimeLeft,
+        submited: submited
       });
 
       const optionIds = await state.HrTest.methods.getCurrentOptionIds(quizId).call();
@@ -85,10 +93,18 @@ class DefaultName extends Component {
       }
       this.setState({ optionsList });
 
-      setTimeout(() => {
-        this.calculateResult();
-        this.setState({ showResult: true });
-      }, questionTx.timeLimit * 1000);
+      let count = questionTx.questionTimeLeft;
+      const countDown = setInterval(() => {
+        if (count > 0) {
+          count -= 1;
+          this.setState({ questionTimeLeft: count });
+        } else {
+          clearInterval(countDown);
+          this.calculateResult();
+          this.setState({ showResult: true });
+        }
+      }, 1000);
+
     } else {
       this.calculateResult();
       this.setState({ showResult: true });
@@ -100,6 +116,7 @@ class DefaultName extends Component {
     const { state } = this.props;
     const { quizId, currentQuestionId } = this.state;
     const tx = await state.HrTest.methods.submitAnswer(quizId, currentQuestionId, choosedOption).send();
+    this.setState({ submited: true });
     console.log(tx);
   }
 
@@ -136,7 +153,7 @@ class DefaultName extends Component {
 
   render() {
     const { state } = this.props;
-    const { showResult, quizUsersList, completed, currentQuestion, questionText, questionTimeLimit, optionsList } = this.state;
+    const { showResult, submited, quizUsersList, completed, currentQuestion, questionText, questionTimeLeft, optionsList } = this.state;
     return (
       <div className="admin container">
         <div className="row">
@@ -165,9 +182,15 @@ class DefaultName extends Component {
                 !completed &&
                 <div>
                   {
-                    currentQuestion > 0 && !showResult &&
+                    currentQuestion > 0 && !showResult && submited &&
                     <div>
-                      Question: {questionText} | Time Left: {questionTimeLimit}
+                      You're too fast!!!
+                    </div>
+                  }
+                  {
+                    currentQuestion > 0 && !showResult && !submited &&
+                    <div>
+                    Question: {questionText} | Time Left: {questionTimeLeft > 0 && questionTimeLeft}
                       <div>
                         {
                           optionsList.map((option, z) => {

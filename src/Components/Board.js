@@ -55,10 +55,14 @@ class DefaultName extends Component {
     if (this.state.currentQuestion > 0) {
       const questionId = await state.HrTest.methods.getCurrentQuestionId(quizId).call();
       const questionTx = await state.HrTest.methods.questions(questionId).call();
+      const serverTime = await state.HrTest.methods.getServerTime().call();
+      questionTx.questionTimeLeft = questionTx.timeLimit - (serverTime - questionTx.timeStart);
       this.setState({
+        currentQuestionId: questionId,
         questionText: questionTx.questionText,
         questionTimeLimit: questionTx.timeLimit,
-        questionTimeStart: questionTx.timeStart
+        questionTimeStart: questionTx.timeStart,
+        questionTimeLeft: questionTx.questionTimeLeft
       });
 
       const optionIds = await state.HrTest.methods.getCurrentOptionIds(quizId).call();
@@ -71,10 +75,18 @@ class DefaultName extends Component {
       }
       this.setState({ optionsList });
 
-      setTimeout(() => {
-        this.calculateResult();
-        this.setState({ showResult: true });
-      }, questionTx.timeLimit * 1000);
+      let count = questionTx.questionTimeLeft;
+      const countDown = setInterval(() => {
+        if(count > 0) {
+          count -= 1;
+          this.setState({questionTimeLeft: count});
+        } else {
+          clearInterval(countDown);
+          this.calculateResult();
+          this.setState({ showResult: true });
+        }
+      }, 1000);
+
     } else {
       this.calculateResult();
       this.setState({ showResult: true });
@@ -133,7 +145,7 @@ class DefaultName extends Component {
 
   render() {
     const { state } = this.props;
-    const { showResult, quizId, quizUsersList, completed, currentQuestion, quizName, questionText, questionTimeLimit, optionsList } = this.state;
+    const { showResult, quizId, quizUsersList, completed, currentQuestion, quizName, questionText, questionTimeLeft, optionsList } = this.state;
     return (
       <div className="admin container">
         <div className="row">
@@ -172,7 +184,7 @@ class DefaultName extends Component {
                     currentQuestion > 0 && !showResult &&
                     <div>
                       <p>CurrentQuestion: {currentQuestion}</p>
-                      Question: {questionText} | Time Limit: {questionTimeLimit}
+                      Question: {questionText} | Time Left: {questionTimeLeft > 0 && questionTimeLeft}
                       <div>
                         {
                           optionsList.map((option, z) => {

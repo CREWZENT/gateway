@@ -178,6 +178,13 @@ contract HrTest is Ownable {
         }
     }
 
+    function getServerTime() public view returns (uint) {
+        return now;
+    }
+    function checkUserSubmited(uint _questionId) public view returns (bool) {
+        return questionIdToUserSubmited[_questionId][msg.sender];
+    }
+
     function getCurrentOptionIds(uint _quizId) public view returns (uint[]) {
         uint _currentQuestion = quizs[_quizId].currentQuestion;
         if(_currentQuestion > 0) {
