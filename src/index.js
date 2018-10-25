@@ -276,8 +276,10 @@ class Root extends Component {
 
           {
             !state.user && state.user !== false &&
-            <div className="text-center">
-              <div className="loader"></div>
+            <div className="row">
+              <div className="text-center mt-5 mx-auto">
+                <div className="loader"></div>
+              </div>
             </div>
           }
 

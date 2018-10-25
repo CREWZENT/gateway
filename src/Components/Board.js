@@ -27,7 +27,7 @@ class DefaultName extends Component {
       questionTimeLimit: 0,
       questionTimeStart: 0,
       optionsList: [],
-      resultShowing: false,
+      showResult: false,
       quizUsersList: []
     }
   }
@@ -39,7 +39,7 @@ class DefaultName extends Component {
 
     state.HrTest.events.JoinQuiz({}, (err, event) => {
       console.log(event);
-      this.showResult();
+      this.calculateResult();
     });
   }
 
@@ -72,10 +72,12 @@ class DefaultName extends Component {
       this.setState({ optionsList });
 
       setTimeout(() => {
-        this.showResult();
+        this.calculateResult();
+        this.setState({ showResult: true });
       }, questionTx.timeLimit * 1000);
     } else {
-      this.showResult();
+      this.calculateResult();
+      this.setState({ showResult: true });
     }
   }
 
@@ -91,16 +93,16 @@ class DefaultName extends Component {
         this.setState({ currentQuestion: tx.events.NextQuestion.returnValues.currentQuestion });
         this.getQuestionDetail();
       } else if (tx.events.QuizComplete) {
-        this.showResult();
+        this.calculateResult();
         this.setState({ completed: true });
       }
     }
 
-    this.setState({ resultShowing: false });
+    this.setState({ showResult: false });
   }
 
-  async showResult() {
-    console.log("Show result");
+  async calculateResult() {
+    console.log("Calculate result");
     const { state } = this.props;
     const { quizId } = this.state;
 
@@ -126,14 +128,12 @@ class DefaultName extends Component {
       quizUsersList.push(quizUser)
     }
 
-
-    this.setState({ resultShowing: true, quizUsersList });
-    console.log(quizUsersList);
+    this.setState({ quizUsersList });
   }
 
   render() {
     const { state } = this.props;
-    const { resultShowing, quizId, quizUsersList, completed, currentQuestion, quizName, questionText, questionTimeLimit, optionsList } = this.state;
+    const { showResult, quizId, quizUsersList, completed, currentQuestion, quizName, questionText, questionTimeLimit, optionsList } = this.state;
     return (
       <div className="admin container">
         <div className="row">
@@ -146,7 +146,7 @@ class DefaultName extends Component {
                 completed && 'Completed'
               }
               {
-                (currentQuestion === 0 || resultShowing || completed) &&
+                (currentQuestion === 0 || showResult || completed) &&
                 <div>
                   <h3>Users List:</h3>
                   {
@@ -164,12 +164,12 @@ class DefaultName extends Component {
                 !completed &&
                 <div>
                   {
-                    resultShowing &&
+                    showResult &&
                     <button className="btn btn-outline-info" onClick={() => this.nextQuestion(quizId)}>{currentQuestion === 0 ? "Start" : "Next"}</button>
                   }
 
                   {
-                    currentQuestion > 0 && !resultShowing &&
+                    currentQuestion > 0 && !showResult &&
                     <div>
                       <p>CurrentQuestion: {currentQuestion}</p>
                       Question: {questionText} | Time Limit: {questionTimeLimit}

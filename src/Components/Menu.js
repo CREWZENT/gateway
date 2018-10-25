@@ -72,9 +72,16 @@ class DefaultName extends Component {
                                 <a className="nav-link" href="/templates">Templates</a>
                             </li>
                         </ul>
+
                         {
                             state.user && state.user.mainAddress && state.user.mainAddress.toString().length > 1 &&
                             <Gateway />
+                        }
+                        {
+                            state.Gateway &&
+                            <div>
+                                <a className="btn btn-outline-warning my-2 mx-2" style={{ 'color': 'white' }}>TeneCoin: {state.balance}</a>
+                            </div>
                         }
                         {
                             state.user === false &&
@@ -82,7 +89,7 @@ class DefaultName extends Component {
                         }
                         {
                             state.user && state.user !== false &&
-                            <button className="btn btn-primary my-2 mx-2" onClick={this.signOut}>Facebook Logout</button>
+                            <button className="btn btn-outline-primary my-2 mx-2" onClick={this.signOut}>Logout</button>
                         }
 
                     </div>

@@ -76,10 +76,9 @@ class DefaultName extends Component {
       <div>
         {
           state.Gateway &&
-          < div className="form-inline">
-            <a className="my-2 mx-2" style={{'color': 'white'}}>TeneCoin: {state.balance}</a>
-            <button className="btn btn-outline-success my-2 mx-2" onClick={this.deposit}>Deposit ETH</button>
-            <button className="btn btn-outline-info my-2 mx-2" onClick={this.withdraw}>Withdraw ETH</button>
+          <div>
+            <button className="btn btn-success my-2 mx-2" onClick={this.deposit}>Deposit & Withdraw ETH</button>
+            {/* <button className="btn btn-outline-info my-2 mx-2" onClick={this.withdraw}>Withdraw ETH</button> */}
           </div>
         }
       </div>

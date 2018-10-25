@@ -13,6 +13,7 @@ class DefaultName extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            creating: false,
             quizId: 99,
             quizName: "Name of the quiz",
             questionText: "What do you want to ask?",
@@ -27,7 +28,7 @@ class DefaultName extends Component {
                     name: "Name of the template 1",
                     questionsList: [
                         {
-                            timeLimit: 5,
+                            timeLimit: 30,
                             correctOption: 2,
                             name: "What do you want to ask 1?",
                             optionsList: [
@@ -38,7 +39,7 @@ class DefaultName extends Component {
                             ]
                         },
                         {
-                            timeLimit: 5,
+                            timeLimit: 30,
                             correctOption: 2,
                             name: "What do you want to ask 2?",
                             optionsList: [
@@ -49,7 +50,7 @@ class DefaultName extends Component {
                             ]
                         },
                         {
-                            timeLimit: 5,
+                            timeLimit: 30,
                             correctOption: 2,
                             name: "What do you want to ask 3?",
                             optionsList: [
@@ -66,7 +67,7 @@ class DefaultName extends Component {
                     name: "Name of the template 2",
                     questionsList: [
                         {
-                            timeLimit: 5,
+                            timeLimit: 30,
                             correctOption: 2,
                             name: "What do you want to ask 1?",
                             optionsList: [
@@ -77,7 +78,7 @@ class DefaultName extends Component {
                             ]
                         },
                         {
-                            timeLimit: 5,
+                            timeLimit: 30,
                             correctOption: 2,
                             name: "What do you want to ask 2?",
                             optionsList: [
@@ -88,7 +89,7 @@ class DefaultName extends Component {
                             ]
                         },
                         {
-                            timeLimit: 5,
+                            timeLimit: 30,
                             correctOption: 2,
                             name: "What do you want to ask 3?",
                             optionsList: [
@@ -120,13 +121,21 @@ class DefaultName extends Component {
 
     async createQuiz(quiz) {
         const { state } = this.props;
-        const tx = await state.HrTest.methods.createQuiz(quiz.name).send();
-        console.log(tx);
+        this.setState({ creating: true });
 
-        if (tx.blockHash) {
-            const quizId = tx.events.CreateQuiz.returnValues.quizId;
-            this.createQuestion(quizId, quiz);
+        try {
+            const tx = await state.HrTest.methods.createQuiz(quiz.name).send();
+            console.log(tx);
+            if (tx.blockHash) {
+                const quizId = tx.events.CreateQuiz.returnValues.quizId;
+                this.createQuestion(quizId, quiz);
+            }
+        } catch (error) {
+            console.log(error);
+            
+            this.createQuiz(quiz);
         }
+
     }
 
     /**
@@ -155,11 +164,11 @@ class DefaultName extends Component {
                 option4,
             ).send();
             console.log(tx);
-            if(!tx.blockHash) {
+            if (!tx.blockHash) {
                 error = true;
             }
         }
-        if(error === false) {
+        if (error === false) {
             window.location = `/board/${quizId}`;
         }
     }
@@ -194,7 +203,7 @@ class DefaultName extends Component {
     }
 
     render() {
-
+        const { creating } = this.state;
         return (
             <div className="admin container">
                 {/* <div className="row">
@@ -242,48 +251,61 @@ class DefaultName extends Component {
                     </div>
                     <div className="col-3"></div>
                 </div> */}
+                {
+                    creating === true &&
+                    <div className="row">
+                        <div className="text-center mt-5 mx-auto">
+                            <div className="loader"></div>
+                            Creating Quiz
+                        </div>
 
-                <div className="row">
-                    <div className="col">
-                        <hr />
-                        <h1>Quiz list</h1>
+                    </div>
+                }
+                {
+                    creating === false &&
+                    <div className="row">
+                        <div className="col">
+                            <hr />
+                            <h1>Quiz list</h1>
 
-                        <div>
-                            {
-                                this.state.quizsList.map((quiz, x) => {
-                                    return (
-                                        <div key={x} className="card mt-5" onClick={() => this.createQuiz(quiz)}>
-                                            <h5>QuizName: {quiz.name}</h5>
-                                            <div>
-                                                {
-                                                    quiz.questionsList.map((question, y) => {
-                                                        return (
-                                                            <div key={y}>
-                                                                Question Name: {question.name}
-                                                                <div>
-                                                                    {
-                                                                        question.optionsList.map((option, z) => {
-                                                                            return (
-                                                                                <div key={z} style={{ 'background': z === question.correctOption ? '#f1f1f1' : "" }}>
-                                                                                    {option.name}
-                                                                                </div>
-                                                                            )
-                                                                        })
-                                                                    }
+                            <div>
+                                {
+                                    this.state.quizsList.map((quiz, x) => {
+                                        return (
+                                            <div key={x} className="card mt-5" onClick={() => this.createQuiz(quiz)}>
+                                                <h5>QuizName: {quiz.name}</h5>
+                                                <div>
+                                                    {
+                                                        quiz.questionsList.map((question, y) => {
+                                                            return (
+                                                                <div key={y}>
+                                                                    Question Name: {question.name}
+                                                                    <div>
+                                                                        {
+                                                                            question.optionsList.map((option, z) => {
+                                                                                return (
+                                                                                    <div key={z} style={{ 'background': z === question.correctOption ? '#f1f1f1' : "" }}>
+                                                                                        {option.name}
+                                                                                    </div>
+                                                                                )
+                                                                            })
+                                                                        }
 
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        );
-                                                    })
-                                                }
+                                                            );
+                                                        })
+                                                    }
+                                                </div>
                                             </div>
-                                        </div>
-                                    );
-                                })
-                            }
+                                        );
+                                    })
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
+
 
             </div>
         );
