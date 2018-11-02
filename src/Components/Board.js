@@ -12,6 +12,7 @@ import firebase from '../FirebaseConfig';
 const db = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
 db.settings(settings);
+let countDownInterval;
 
 class DefaultName extends Component {
 
@@ -37,8 +38,15 @@ class DefaultName extends Component {
 
     this.getQuestionDetail();
 
+    state.HrTest.events.SubmitedAll({ filter: { quizId: this.state.quizId } }, (err, event) => {
+      console.log('SubmitedAll');
+      clearInterval(countDownInterval);
+      this.calculateResult();
+      this.setState({ showResult: true, submited: false });
+    });
+
     state.HrTest.events.JoinQuiz({}, (err, event) => {
-      console.log(event);
+      console.log('JoinQuiz');
       this.calculateResult();
     });
   }
@@ -76,12 +84,12 @@ class DefaultName extends Component {
       this.setState({ optionsList });
 
       let count = questionTx.questionTimeLeft;
-      const countDown = setInterval(() => {
-        if(count > 0) {
+      countDownInterval = setInterval(() => {
+        if (count > 0) {
           count -= 1;
-          this.setState({questionTimeLeft: count});
-        } else {
-          clearInterval(countDown);
+          this.setState({ questionTimeLeft: count });
+        } else if (this.state.showResult === false) {
+          clearInterval(countDownInterval);
           this.calculateResult();
           this.setState({ showResult: true });
         }

@@ -7,7 +7,7 @@ import { LocalAddress, CryptoUtils } from 'loom-js';
 const privateKey = CryptoUtils.B64ToUint8Array('adXShr0HupvbEaXCQeXJINHhD+lpXBFt+Qkk+sYBJGHWaCYEDfEgrpFiRm53ffE50Rt+rHeCgPenzhYp5gsy7w==');
 const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey);
 const ownerAddress = LocalAddress.fromPublicKey(publicKey).toString();
-console.log('ownerAddress', ownerAddress);
+console.log('OwnerAddress', ownerAddress);
 
 const fs = require('fs');
 var express = require('express');

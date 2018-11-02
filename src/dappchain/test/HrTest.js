@@ -30,13 +30,13 @@ contract('HrTest', async (accounts) => {
     });
 
     it('Should create question', async () => {
-        await hrTest.createQuestion(0, 3, 2, "This is question 1",
+        await hrTest.createQuestion(0, 3, [1, 2, 3, 4], 4 , "This is question 1",
         "Question 1 - Answer 1", "Question 1 - Answer 2", "Question 1 - Answer Answer 3", "Question 1 - Answer Answer 4");
 
-        await hrTest.createQuestion(0, 3, 2, "This is question 2",
+        await hrTest.createQuestion(0, 3, [1, 2, 3, 4], 4, "This is question 2",
         "Question 2 - Answer 1", "Question 2 - Answer 2", "Question 2 - Answer Answer 3", "Question 2 - Answer Answer 4");
 
-        await hrTest.createQuestion(0, 3, 2, "This is question 3",
+        await hrTest.createQuestion(0, 3, [1, 2, 3, 4], 4, "This is question 3",
         "Question 3 - Answer 1", "Question 3 - Answer 2", "Question 3 - Answer Answer 3", "Question 3 - Answer Answer 4");
 
         const question1 = await hrTest.questions(0);
@@ -59,41 +59,42 @@ contract('HrTest', async (accounts) => {
     });
 
     it('Submit answer 1', async () => {
-        const tx1 = await hrTest.submitAnswer(0, 0, 2, { from: accounts[1] });
-        assert.equal(0, tx1.logs[0].args.questionId.toNumber());
-        assert.equal(true, tx1.logs[0].args.isCorrect);
+        const tx = await hrTest.submitAnswer(0, 0, 2, { from: accounts[1] });
+        assert.equal(0, tx.logs[0].args.questionId.toNumber());
+        assert.equal(3, tx.logs[0].args.score.toNumber());
     });
 
     it("Should nextQuestion 2", async () => {
         await snooze(5000);
         await hrTest.nextQuestion(0, { from: accounts[0] });
-        quiz = await hrTest.quizs(0);
+        let quiz = await hrTest.quizs(0);
         assert.equal(2, quiz[2].toNumber()); // currentQuestion = 2
     });
 
     it('Submit answer 2', async () => {
-        const tx2 = await hrTest.submitAnswer(0, 1, 2, { from: accounts[1] });
-        assert.equal(1, tx2.logs[0].args.questionId.toNumber());
-        assert.equal(true, tx2.logs[0].args.isCorrect);
+        const tx = await hrTest.submitAnswer(0, 1, 2, { from: accounts[1] });
+        assert.equal(1, tx.logs[0].args.questionId.toNumber());
+        assert.equal(3, tx.logs[0].args.score.toNumber());
     });
 
     it("Should nextQuestion 3", async () => {
         await snooze(5000);
         await hrTest.nextQuestion(0, { from: accounts[0] });
-        quiz = await hrTest.quizs(0);
+        let quiz = await hrTest.quizs(0);
         assert.equal(3, quiz[2].toNumber()); // currentQuestion = 3
     });
 
     it('Submit answer 3', async () => {
-        const tx3 = await hrTest.submitAnswer(0, 2, 1, { from: accounts[1] });
-        assert.equal(2, tx3.logs[0].args.questionId.toNumber());
-        assert.equal(false, tx3.logs[0].args.isCorrect);
+        const tx = await hrTest.submitAnswer(0, 2, 1, { from: accounts[1] });
+        assert.equal(2, tx.logs[0].args.questionId.toNumber());
+        assert.equal(2, tx.logs[0].args.score.toNumber());
+        assert.equal(8, tx.logs[0].args.totalScore.toNumber());
     });
 
-    it("Should nextQuestion 4", async () => {
+    it("Should finished", async () => {
         await snooze(5000);
-        const tx = await hrTest.nextQuestion(0, { from: accounts[0] });
-        quiz = await hrTest.quizs(0);
+        await hrTest.nextQuestion(0, { from: accounts[0] });
+        let quiz = await hrTest.quizs(0);
         assert.equal(3, quiz[2].toNumber()); // currentQuestion = 3
     });
 

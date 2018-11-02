@@ -32,18 +32,20 @@ contract HrTest is Ownable {
     mapping(uint => uint[]) quizIdToQuestionIds;
     mapping(uint => uint[]) questionIdToOptionIds;
     mapping(uint => uint) questionIdToStartTime;
-    mapping(uint => uint) private questionIdToCorrectOption;
+    mapping(uint => mapping(uint => uint)) private questionIdToOptionScore;
     mapping(uint => mapping(address => bool)) questionIdToUserSubmited;
     mapping(uint => mapping(address => uint)) quizIdToUserScore;
     mapping(uint => mapping(address => uint)) quizIdToUserReward;
-    mapping(uint => uint) quizIdToQuestionCount;
+    mapping(uint => uint) quizIdToTotalScore;
+    mapping(uint => bool) questionIdToSubmitedAll;
 
-    event SubmitAnswer(uint questionId, bool isCorrect, uint score);
-    event GetReward(address user, uint reward);
-    event CreateQuiz(uint quizId);
-    event NextQuestion(uint currentQuestion);
-    event QuizComplete(uint _quizId);
-    event JoinQuiz(uint _quizId, address user);
+    event SubmitedAll(uint indexed quizId, uint questionId);
+    event SubmitAnswer(uint indexed quizId, uint indexed questionId, uint score, uint totalScore);
+    event GetReward(uint indexed quizId, address user, uint reward);
+    event CreateQuiz(uint indexed quizId);
+    event NextQuestion(uint indexed quizId, uint currentQuestion);
+    event QuizComplete(uint indexed quizId);
+    event JoinQuiz(uint indexed quizId, address user);
 
     /**
      * Set tene coin address
@@ -63,14 +65,16 @@ contract HrTest is Ownable {
     function createQuestion(
         uint _quizId,
         uint _timeLimit,
-        uint _correctOption,
+        uint[] _scoreArray,
+        uint _maxScore,
         string _questionText,
+        string _option0,
         string _option1,
         string _option2,
-        string _option3,
-        string _option4
+        string _option3
     ) public {
         require(quizIdToOwner[_quizId] == msg.sender, "Don't have access.");
+        require(_scoreArray.length == 4, "Only support 4 options");
 
         // Save questionIds
         uint _questionId = questions.push(Question(_questionText, _timeLimit, 0)) - 1;
@@ -78,19 +82,24 @@ contract HrTest is Ownable {
 
         // Save optionIds
         uint _optionId;
+        _optionId = options.push(Option(_option0)) - 1;
+        questionIdToOptionIds[_questionId].push(_optionId);
         _optionId = options.push(Option(_option1)) - 1;
         questionIdToOptionIds[_questionId].push(_optionId);
         _optionId = options.push(Option(_option2)) - 1;
         questionIdToOptionIds[_questionId].push(_optionId);
         _optionId = options.push(Option(_option3)) - 1;
         questionIdToOptionIds[_questionId].push(_optionId);
-        _optionId = options.push(Option(_option4)) - 1;
-        questionIdToOptionIds[_questionId].push(_optionId);
 
-        // Save correct option
-        questionIdToCorrectOption[_questionId] = _correctOption;
-        quizIdToQuestionCount[_quizId]++;
+        // Save option score
+        for(uint i = 0; i < _scoreArray.length; i++){
+            uint score = _scoreArray[i];
+            questionIdToOptionScore[_questionId][i] = score;
+        }
+
+        quizIdToTotalScore[_quizId] += _maxScore;
     }
+    
 
 
     function nextQuestion(uint _quizId) public {
@@ -106,12 +115,13 @@ contract HrTest is Ownable {
             // Check valid time of previous question
             if(_currentQuestion > 0) {
                 uint _previousQuestionId = quizIdToQuestionIds[_quizId][_currentQuestion - 1];
-                require(questions[_previousQuestionId].timeStart + questions[_previousQuestionId].timeLimit < now, "Question not done!");
+                bool enoughTime = questions[_previousQuestionId].timeStart + questions[_previousQuestionId].timeLimit < now;
+                require(enoughTime || questionIdToSubmitedAll[_previousQuestionId], "Question not done!");
             }
 
             // Next question
             quizs[_quizId].currentQuestion++;
-            emit NextQuestion(quizs[_quizId].currentQuestion);
+            emit NextQuestion(_quizId, quizs[_quizId].currentQuestion);
         } else {
             quizs[_quizId].completed = true;
             emit QuizComplete(_quizId); // Last answer and show result
@@ -120,11 +130,11 @@ contract HrTest is Ownable {
             for (uint i = 0; i < quizIdToUsersList[_quizId].length; i++)  {
                 address _user = quizIdToUsersList[_quizId][i];
                 // Give reward if correct answer > 50%
-                if(quizIdToUserScore[_quizId][_user] * modulus > quizIdToQuestionCount[_quizId] * modulus * 50 / 100) {
+                if(quizIdToUserScore[_quizId][_user] * modulus > quizIdToTotalScore[_quizId] * modulus * 50 / 100) {
                     uint _reward = 100 * modulus;
                     // teneCoinContract.earn(msg.sender, _reward);
                     quizIdToUserReward[_quizId][_user] = _reward;
-                    emit GetReward(_user, _reward);
+                    emit GetReward(_quizId, _user, _reward);
                 }
             }
         }
@@ -138,7 +148,7 @@ contract HrTest is Ownable {
         emit JoinQuiz(_quizId, msg.sender);
     }
 
-    function submitAnswer(uint _quizId, uint _questionId, uint _correctOption) public {
+    function submitAnswer(uint _quizId, uint _questionId, uint _selectedOption) public {
         require(quizIdToUser[_quizId][msg.sender] == true, "User have not joined.");
         uint _currentQuestion = quizs[_quizId].currentQuestion;
         require(_questionId == quizIdToQuestionIds[_quizId][_currentQuestion - 1], "Wrong question index.");
@@ -149,13 +159,24 @@ contract HrTest is Ownable {
         questionIdToUserSubmited[_questionId][msg.sender] = true;
 
         // Calculate score
-        bool isCorrect = questionIdToCorrectOption[_questionId] == _correctOption;
-        if(isCorrect) {
-            quizIdToUserScore[_quizId][msg.sender]++;
-        }
+        uint score = questionIdToOptionScore[_questionId][_selectedOption];
+        quizIdToUserScore[_quizId][msg.sender] += score;
         
         // Show result
-        emit SubmitAnswer(_questionId, isCorrect, quizIdToUserScore[_quizId][msg.sender]);
+        emit SubmitAnswer(_quizId, _questionId, score, quizIdToUserScore[_quizId][msg.sender]);
+
+        // Next question if everyone submited.
+        bool submitedAll = true;
+        for (uint i = 0; i < quizIdToUsersList[_quizId].length; i++)  {
+            address _user = quizIdToUsersList[_quizId][i];
+            if(!questionIdToUserSubmited[_questionId][_user]) {
+                submitedAll = false;
+            }
+        }
+        if(submitedAll) {
+            questionIdToSubmitedAll[_questionId] = true;
+            emit SubmitedAll(_quizId, _questionId);
+        }
     }
 
     function getQuizUsersList(uint _quizId) public view returns (address[]) {

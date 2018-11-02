@@ -44,4 +44,8 @@ ul {
   background-position: .4rem .6rem;
   background-size: .75rem .75rem;
 }
+
+.btn-answer {
+  white-space: inherit;
+}
 /*# sourceMappingURL=index.css.map */

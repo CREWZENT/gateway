@@ -12,6 +12,7 @@ import firebase from '../FirebaseConfig';
 const db = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
 db.settings(settings);
+let countDownInterval;
 
 class DefaultName extends Component {
 
@@ -40,19 +41,26 @@ class DefaultName extends Component {
 
     this.getQuestionDetail();
     state.HrTest.events.NextQuestion({}, (err, event) => {
-      console.log(event);
+      console.log('NextQuestion', event);
       this.setState({ showResult: false, submited: false });
       this.getQuestionDetail();
     });
 
+    state.HrTest.events.SubmitedAll({}, (err, event) => {
+      console.log('SubmitedAll', event);
+      clearInterval(countDownInterval);
+      this.calculateResult();
+      this.setState({ showResult: true, submited: false });
+    });
+
     state.HrTest.events.QuizComplete({}, (err, event) => {
-      console.log(event);
+      console.log('QuizComplete', event);
       this.calculateResult();
       this.setState({ completed: true });
     });
 
     state.HrTest.events.JoinQuiz({}, (err, event) => {
-      console.log(event);
+      console.log('JoinQuiz', event);
       this.calculateResult();
     });
   }
@@ -72,7 +80,7 @@ class DefaultName extends Component {
       const questionTx = await state.HrTest.methods.questions(questionId).call();
       const serverTime = await state.HrTest.methods.getServerTime().call();
       const submited = await state.HrTest.methods.checkUserSubmited(questionId).call();
-      
+
       questionTx.questionTimeLeft = questionTx.timeLimit - (serverTime - questionTx.timeStart);
       this.setState({
         currentQuestionId: questionId,
@@ -94,16 +102,18 @@ class DefaultName extends Component {
       this.setState({ optionsList });
 
       let count = questionTx.questionTimeLeft;
-      const countDown = setInterval(() => {
+
+      countDownInterval = setInterval(() => {
         if (count > 0) {
           count -= 1;
           this.setState({ questionTimeLeft: count });
-        } else {
-          clearInterval(countDown);
+        } else if (this.state.showResult === false) {
+          clearInterval(countDownInterval);
           this.calculateResult();
           this.setState({ showResult: true });
         }
       }, 1000);
+
 
     } else {
       this.calculateResult();
@@ -112,7 +122,6 @@ class DefaultName extends Component {
   }
 
   async submitAnswer(choosedOption) {
-
     const { state } = this.props;
     const { quizId, currentQuestionId } = this.state;
     const tx = await state.HrTest.methods.submitAnswer(quizId, currentQuestionId, choosedOption).send();
@@ -190,15 +199,15 @@ class DefaultName extends Component {
                   {
                     currentQuestion > 0 && !showResult && !submited &&
                     <div>
-                    Question: {questionText} | Time Left: {questionTimeLeft > 0 && questionTimeLeft}
+                      Question: {questionText} | Time Left: {questionTimeLeft > 0 && questionTimeLeft}
                       <div>
                         {
                           optionsList.map((option, z) => {
                             return (
                               <div key={z}>
-                                <button className="btn btn-outline-success" onClick={() => this.submitAnswer(z)}>
+                                <p className="btn btn-outline-success btn-answer" onClick={() => this.submitAnswer(z)}>
                                   {option.name}
-                                </button>
+                                </p>
 
                               </div>
                             )

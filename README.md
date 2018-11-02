@@ -15,31 +15,41 @@ $ npm i
 ### 2.1 Run sidechain
 Run:
 ```
+$ cd src/dappchain
 $ sh .reset (first time or delete old data)
 $ sh .start
 ```
 
-### 2.2 Deploy smart contract (Open new terminal)
+### 2.2 Test smart contract (Open new terminal)
+Run:
+```
+$ cd src/dappchain
+$ npm run test
+```
+
+### 2.3 Deploy smart contract (Open new terminal)
 Deploy:
 ```
+$ cd src/dappchain
 $ npm run deploy
 $ npm run deploy:reset (delete old data)
 ```
 
-### 2.3 Transfer gateway (Open new terminal)
+### 2.4 Transfer gateway (Open new terminal)
 Run:
 ```
+$ cd src/dappchain
 $ npm run gateway
 ```
 
-### 2.4 Run webclient (Open new terminal)
+### 2.5 Run webclient (Open new terminal)
 Run:
 ```
 $ npm start
 ```
 
 ---
-## 3. Security
+## 3. Security for user info in server side
 
 ```fs
 service cloud.firestore {
