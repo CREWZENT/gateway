@@ -87,13 +87,13 @@ class DefaultName extends Component {
                 }
                 {
                     (state.user.mainAddress && state.user.mainAddress.toString().length > 1) &&
-                    <div>
+                    <div class='join-room-div'>
                         <form onSubmit={(e) => e.preventDefault()}>
                             <div className="form-group">
-                                <label>Join Room</label>
-                                <input type="number" className="form-control" placeholder="quizId" value={this.state.quizId} onChange={this.changeQuizId} />
+                                <label>Enter PIN</label>
+                                <input type="number" className="form-control" placeholder="Quiz Id..." value={this.state.quizId} onChange={this.changeQuizId} />
+                                <button className="btn-join-quiz" onClick={() => this.joinQuiz()}>Enter</button>
                             </div>
-                            <button className="btn btn-success m-2" onClick={() => this.joinQuiz()}>Join Room</button>
                         </form>
                     </div>
 

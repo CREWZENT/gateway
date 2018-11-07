@@ -1,4 +1,9 @@
 
+@font-face {
+  font-family: google-san-bold;
+  src: url(../font/GoogleSans-Bold.ttf)
+}
+
 $deepPurple: #3b5998;
 $colororange:#f48021;
 $bd-purple: #563d7c;
@@ -59,4 +64,65 @@ ul {
 
 .btn-answer{
   white-space: inherit;
+}
+
+.form-group{
+  position: relative;
+  padding-bottom: 100px;
+}
+
+.btn-join-quiz {
+  width: 235px;
+  height: 83px;
+  background-color: #5a2f5e;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 8px #9b71a5;
+  color: #ffffff;
+  font-family: google-san-bold;
+  font-size: 28px;
+  position: absolute;
+  bottom: 4px;
+
+  &:hover{
+    bottom: 0px;
+    box-shadow: 0 4px #9b71a5;
+  }
+  // &:active{
+  //   bottom: 0px;
+  //   box-shadow: 0 4px #9b71a5;
+  // }
+}
+
+.join-room-div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f2f2f2;
+  padding-bottom: 92px;
+}
+
+.form-group input {
+  width: 235px;
+  height: 80px;
+  border: 4px solid #5a2f5d;
+  border-radius: 10px;
+  font-size:25px;
+  color: #5a2f5d;
+  text-align: center;
+  font-weight: bold;
+  font-family: google-san-bold;
+  background-color: #fafafa;
+}
+
+.form-group label {
+  color: #5a2f5d;
+  font-weight: bold;
+  font-size: 42px;
+  width: 100%;
+  text-align: center;
+  font-family: google-san-bold;
 }
