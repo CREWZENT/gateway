@@ -40,27 +40,27 @@ class DefaultName extends Component {
     const { state } = this.props;
 
     this.getQuestionDetail();
-    state.HrTest.events.NextQuestion({}, (err, event) => {
-      console.log('NextQuestion', event);
+    state.HrTest.events.NextQuestion({ filter: { quizId: this.state.quizId } }, (err, event) => {
+      console.log('NextQuestion');
       this.setState({ showResult: false, submited: false });
       this.getQuestionDetail();
     });
 
-    state.HrTest.events.SubmitedAll({}, (err, event) => {
-      console.log('SubmitedAll', event);
+    state.HrTest.events.SubmitedAll({ filter: { quizId: this.state.quizId } }, (err, event) => {
+      console.log('SubmitedAll');
       clearInterval(countDownInterval);
       this.calculateResult();
       this.setState({ showResult: true, submited: false });
     });
 
-    state.HrTest.events.QuizComplete({}, (err, event) => {
-      console.log('QuizComplete', event);
+    state.HrTest.events.QuizComplete({ filter: { quizId: this.state.quizId } }, (err, event) => {
+      console.log('QuizComplete');
       this.calculateResult();
       this.setState({ completed: true });
     });
 
-    state.HrTest.events.JoinQuiz({}, (err, event) => {
-      console.log('JoinQuiz', event);
+    state.HrTest.events.JoinQuiz({ filter: { quizId: this.state.quizId } }, (err, event) => {
+      console.log('JoinQuiz');
       this.calculateResult();
     });
   }
@@ -125,8 +125,10 @@ class DefaultName extends Component {
     const { state } = this.props;
     const { quizId, currentQuestionId } = this.state;
     const tx = await state.HrTest.methods.submitAnswer(quizId, currentQuestionId, choosedOption).send();
-    this.setState({ submited: true });
-    console.log(tx);
+    if (tx.blockHash) {
+      this.setState({ submited: true });
+      console.log("SubmitAnswer");
+    }
   }
 
   async calculateResult() {
