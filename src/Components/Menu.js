@@ -3,16 +3,6 @@ import React, { Component } from 'react';
 import firebase from '../FirebaseConfig';
 import { connect } from 'react-redux';
 
-import Loadable from 'react-loadable';
-import Loading from './Loading';
-
-const Gateway = Loadable({
-    loader: () => import('./Gateway'),
-    loading: Loading
-});
-
-// import { Link } from 'react-router-dom';
-
 class DefaultName extends Component {
     constructor(props) {
         super(props);
@@ -74,8 +64,10 @@ class DefaultName extends Component {
                         </ul>
 
                         {
-                            state.user && state.user.mainAddress && state.user.mainAddress.toString().length > 1 &&
-                            <Gateway />
+                            state.user && state.user.mainAddress && state.user.mainAddress.toString().length > 1 && state.Gateway &&
+                            <div>
+                                <a className="btn btn-success my-2 mx-2" href="/gateway">Deposit & Withdraw ETH</a>
+                            </div>
                         }
                         {
                             state.Gateway &&

@@ -43,9 +43,9 @@ class GatewayServer {
 
     if (tx1 === 'TeneCoin') {
       const TeneAddress = require(`./build/bin/TeneCoin`).address;
-      const CryptoRunAddress = require(`./build/bin/HrTest`).address;
+      const HrTestAddress = require(`./build/bin/HrTest`).address;
       await HrTest.methods.setTeneCoinAddress(TeneAddress).send();
-      await TeneCoin.methods.grantAccessMint(CryptoRunAddress).send();
+      await TeneCoin.methods.grantAccessMint(HrTestAddress).send();
 
       await this.initGateway();
     }

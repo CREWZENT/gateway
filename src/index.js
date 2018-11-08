@@ -19,6 +19,10 @@ const db = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
 db.settings(settings);
 
+const Gateway = Loadable({
+    loader: () => import('./Components/Gateway'),
+    loading: Loading
+});
 
 const Menu = Loadable({
   loader: () => import('./Components/Menu'),
@@ -284,6 +288,11 @@ class Root extends Component {
           }
 
           <Switch>
+
+            {
+              state.user && state.user.mainAddress && state.user.mainAddress.toString().length > 1 &&
+              <Route path="/gateway" component={Gateway} />
+            }
 
             {
               state.user && state.user.mainAddress && state.user.mainAddress.toString().length > 1 &&

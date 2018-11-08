@@ -17,8 +17,51 @@ class DefaultName extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      histories: []
+    }
+
     this.deposit = this.deposit.bind(this);
     this.withdraw = this.withdraw.bind(this);
+    this.getHistory = this.getHistory.bind(this);
+  }
+
+  componentDidMount() {
+    this.getHistory();
+
+  }
+
+  async getHistory() {
+    const { state } = this.props;
+    if (!state.Gateway) {
+      setTimeout(() => {
+        this.getHistory();
+      }, 1000);
+      return;
+    }
+
+    const histories = [];
+    state.Gateway.events.allEvents({
+      fromBlock: 0,
+      toBlock: 'latest'
+    }, async (err, tx) => {
+      if (tx.event === "Deposit" || tx.event === "WithdrawReceived") {
+        await new Promise((resolve, reject) => {
+          db.collection('users').where("address", "==", tx.returnValues.sideAddress.toLowerCase()).limit(1).get().then((querySnapshot) => {
+            querySnapshot.forEach(async (doc) => {
+              tx.user = doc.data();
+              resolve();
+            })
+          })
+        })
+        console.log(tx);
+        
+        histories.push(tx);
+      }
+      this.setState({ histories })
+
+    });
+
   }
 
   async deposit() {
@@ -72,13 +115,91 @@ class DefaultName extends Component {
 
   render() {
     const { state } = this.props;
+    const { histories } = this.state;
     return (
-      <div>
+      <div className="gateway">
         {
           state.Gateway &&
-          <div>
-            <button className="btn btn-success my-2 mx-2" onClick={this.deposit}>Deposit & Withdraw ETH</button>
-            {/* <button className="btn btn-outline-info my-2 mx-2" onClick={this.withdraw}>Withdraw ETH</button> */}
+          <div className="container">
+            <div className="row">
+
+              <div className="col-md-12 text-center">
+                <h1 className="mt-3"><b>Transfer Gateway</b></h1>
+                <button className="btn btn-success my-2 mx-2" onClick={this.deposit}>Deposit ETH</button>
+                <button className="btn btn-outline-info my-2 mx-2" onClick={this.withdraw}>Withdraw ETH</button>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-md-12 text-center">
+                <h1 className="mt-5"><b>Transfer History</b></h1>
+                <div id="accordion">
+
+                  {
+                    histories.map((tx, i) => {
+                      return (
+                        <div key={i} className="card historyCard">
+                          <div className="card-header" id={"headingThree"}>
+                            <h5 className="mb-0 text-left">
+                              <img className="profile" src={tx.user.photoURL} alt=""/>
+                              <button className="btn btn-link collapsed" data-toggle="collapse" data-target={`#collapse${i}`} aria-expanded="false" aria-controls="collapseThree">
+                                <b>{tx.user.displayName}</b> {tx.event === 'Deposit' ? 'deposit' : 'withdraw'} {tx.returnValues.ETH / 10 ** 18} ETH
+                              </button>
+                            </h5>
+                          </div>
+                          <div id={`collapse${i}`} className="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                            <div className="card-body">
+                              <table className="historyDetail">
+                                <tbody className="text-left">
+                                  <tr>
+                                    <td>User Address</td>
+                                    <td className="pl-2"><a href={`https://ropsten.etherscan.io/address/${tx.returnValues.mainAddress}`} target="_blank">{tx.returnValues.mainAddress.toLowerCase()}</a></td>
+                                  </tr>
+                                  <tr>
+                                    <td>Contract Address</td>
+                                    <td className="pl-2"><a href={`https://ropsten.etherscan.io/address/${tx.address}`} target="_blank">{tx.address}</a></td>
+                                  </tr>
+                                  <tr>
+                                    <td>Block Hash</td>
+                                    <td className="pl-2">{tx.blockHash}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Block Number</td>
+                                    <td className="pl-2">{tx.blockNumber}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Event</td>
+                                    <td className="pl-2">{tx.event}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Value</td>
+                                    <td className="pl-2">{tx.returnValues.ETH / 10 ** 18} ETH</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Signature</td>
+                                    <td className="pl-2">{tx.signature}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Transaction Hash</td>
+                                    <td className="pl-2"><a href={`https://ropsten.etherscan.io/tx/${tx.transactionHash}`} target="_blank">{tx.transactionHash}</a></td>
+                                  </tr>
+                                  <tr>
+                                    <td>Transaction Index</td>
+                                    <td className="pl-2">{tx.transactionIndex}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  }
+
+
+                </div>
+              </div>
+            </div>
           </div>
         }
       </div>

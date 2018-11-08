@@ -12,6 +12,7 @@ contract HrTest is Ownable {
         string name;
         bool completed;
         uint currentQuestion;
+        uint reward;
     }
     struct Question {
         string questionText;
@@ -56,10 +57,14 @@ contract HrTest is Ownable {
         teneCoinContract = TeneCoin(teneAddress);
     }
 
-    function createQuiz(string _quizName) public {
-        uint _quizId = quizs.push(Quiz(_quizName, false, 0)) - 1;
+    function createQuiz(string _quizName, uint _reward) public {
+        uint _quizId = quizs.push(Quiz(_quizName, false, 0, _reward)) - 1;
         emit CreateQuiz(_quizId);
         quizIdToOwner[_quizId] = msg.sender;
+
+        require(_reward >= 10**16, "Reward must be greater than 0.01 TNC");
+        require(teneCoinContract.allowance(msg.sender, this) >= _reward, "Not approve enough money for reward");
+        teneCoinContract.transferFrom(msg.sender, this, _reward);       // Send tene to the contract
     }
 
     function createQuestion(
@@ -126,17 +131,20 @@ contract HrTest is Ownable {
             quizs[_quizId].completed = true;
             emit QuizComplete(_quizId); // Last answer and show result
             
-            // Loop list user in quiz
+            // Give reward if user got highScore
+            address winner;
+            uint highScore;
             for (uint i = 0; i < quizIdToUsersList[_quizId].length; i++)  {
                 address _user = quizIdToUsersList[_quizId][i];
-                // Give reward if correct answer > 50%
-                if(quizIdToUserScore[_quizId][_user] * modulus > quizIdToTotalScore[_quizId] * modulus * 50 / 100) {
-                    uint _reward = 100 * modulus;
-                    // teneCoinContract.earn(msg.sender, _reward);
-                    quizIdToUserReward[_quizId][_user] = _reward;
-                    emit GetReward(_quizId, _user, _reward);
+                if(quizIdToUserScore[_quizId][_user] > highScore) {
+                    winner = _user;
+                    highScore = quizIdToUserScore[_quizId][_user];
                 }
             }
+            uint _reward = quizs[_quizId].reward;
+            teneCoinContract.earn(winner, _reward);
+            quizIdToUserReward[_quizId][winner] = _reward;
+            emit GetReward(_quizId, winner, _reward);
         }
     }
 
