@@ -64,7 +64,7 @@ class DefaultName extends Component {
     render() {
         const { state } = this.props;
         return (
-            <div>
+            <div className="joinRoom">
                 {
                     (state.user.mainAddress === 0 || state.user.mainAddress === 1 || state.user.mainAddress === 2 || state.user.mainAddress === 3) &&
                     <MetaMask />
@@ -87,7 +87,7 @@ class DefaultName extends Component {
                 }
                 {
                     (state.user.mainAddress && state.user.mainAddress.toString().length > 1) &&
-                    <div class='join-room-div'>
+                    <div className='join-room-div'>
                         <form onSubmit={(e) => e.preventDefault()}>
                             <div className="form-group">
                                 <label>Enter PIN</label>

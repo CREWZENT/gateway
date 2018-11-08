@@ -54,12 +54,12 @@ ul {
   white-space: inherit;
 }
 
-.form-group {
+.joinRoom .form-group {
   position: relative;
   padding-bottom: 100px;
 }
 
-.btn-join-quiz {
+.joinRoom .btn-join-quiz {
   width: 235px;
   height: 83px;
   background-color: #5a2f5e;
@@ -74,13 +74,13 @@ ul {
   bottom: 4px;
 }
 
-.btn-join-quiz:hover {
+.joinRoom .btn-join-quiz:hover {
   bottom: 0px;
   -webkit-box-shadow: 0 4px #9b71a5;
           box-shadow: 0 4px #9b71a5;
 }
 
-.join-room-div {
+.joinRoom .join-room-div {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -97,7 +97,7 @@ ul {
   padding-bottom: 92px;
 }
 
-.form-group input {
+.joinRoom .form-group input {
   width: 235px;
   height: 80px;
   border: 4px solid #5a2f5d;
@@ -110,12 +110,62 @@ ul {
   background-color: #fafafa;
 }
 
-.form-group label {
+.joinRoom .form-group label {
   color: #5a2f5d;
   font-weight: bold;
   font-size: 42px;
   width: 100%;
   text-align: center;
   font-family: google-san-bold;
+}
+
+.playing .playing-header {
+  width: 100%;
+  color: #5f2d62;
+  font-family: google-san-bold;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-top: 25px;
+}
+
+.playing .playing-header h1 {
+  display: inline-block;
+  color: #5f2d62;
+  font-size: 28px;
+  font-family: google-san-bold;
+  margin-right: 25PX;
+  padding-bottom: 7px;
+}
+
+.playing .playing-room-id {
+  display: inline-block;
+  width: 170px;
+  height: 56px;
+  font-size: 30px;
+  color: #5f2d62;
+  border: 3px solid #5f2d62;
+  border-radius: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.playing .h-line {
+  width: 100%;
+  height: 3px;
+  background: #5f2d62;
 }
 /*# sourceMappingURL=index.css.map */

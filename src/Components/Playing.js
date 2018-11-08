@@ -164,25 +164,28 @@ class DefaultName extends Component {
 
   render() {
     const { state } = this.props;
-    const { showResult, submited, quizUsersList, completed, currentQuestion, questionText, questionTimeLeft, optionsList } = this.state;
+    const { showResult, quizId, submited, quizUsersList, completed, currentQuestion, questionText, questionTimeLeft, optionsList } = this.state;
     return (
-      <div className="admin container">
-        <div className="row">
-          <div className="col">
-
-            <div className="card">
-              {
-                completed && 'Completed'
-              }
+      <div className="playing">
+        <div>
+            <div>
+              <div className="playing-header"> 
+                <h1>PIN Code</h1> 
+                 <p className="playing-room-id">{quizId}</p>
+              </div>
+              <div className="h-line"></div>
+                {
+                  completed && 'Completed'
+                }
               {
                 (currentQuestion === 0 || showResult || completed) &&
                 <div>
-                  <h3>Users List:</h3>
                   {
                     quizUsersList.map((quizUser, i) => {
                       return (
-                        <div key={i} style={{ 'background': quizUser.address === state.user.address ? "#f1f1f1" : "" }}>
-                          {quizUser.displayName} | Score: {quizUser.score} | Reward: {quizUser.reward}
+                        <div key={i}>
+                          <div style={{ 'background': 'url(' + quizUser.photoURL + ')'}}></div>
+                          <div>{quizUser.displayName} | Score: {quizUser.score} | Reward: {quizUser.reward}</div>
                         </div>
                       )
                     })
@@ -225,7 +228,6 @@ class DefaultName extends Component {
 
             </div>
 
-          </div>
         </div>
 
       </div>
