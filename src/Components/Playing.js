@@ -188,8 +188,8 @@ class DefaultName extends Component {
                     quizUsersList.map((quizUser, i) => {
                       console.log(quizUser.photoURL);
                       return (
-                        <div>
-                        <div className="user" key={i}>
+                        <div key={i}>
+                        <div className="user">
                           <div className="user-avatar" style={{ 'background': 'url(' + quizUser.photoURL + '?width=64)'}}></div>
                           <div className="user-info">{quizUser.displayName}</div>
                           {/* <div className="user-info">{quizUser.displayName} | Score: {quizUser.score} | Reward: {quizUser.reward}</div> */}
