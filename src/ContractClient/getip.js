@@ -14,7 +14,7 @@ if (!fs.existsSync(bin)){
 let builtContracts = fs.readdirSync(contracts);
 builtContracts.forEach(contract => {
     let json = JSON.parse(fs.readFileSync(path.resolve(contracts, contract)));
-    if(json.networks["474747"]) {
-        fs.writeFileSync(path.resolve(bin, contract), JSON.stringify({abi: json.abi, address: json.networks["474747"]["address"]}));
+    if(json.networks["default"]) {
+        fs.writeFileSync(path.resolve(bin, contract), JSON.stringify({abi: json.abi, address: json.networks["default"]["address"]}));
     }
 });

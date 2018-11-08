@@ -74,6 +74,9 @@ class GatewayServer {
       fromBlock: solvedBlockNumber,
       toBlock: 'latest'
     }, async (err, events) => {
+      if(!events) {
+        return;
+      }
       for (let i = 0; i < events.length; i++) {
         let event = events[i];
 

@@ -10,7 +10,7 @@
     "bignumber.js": "^7.2.1",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
-    "loom-truffle-provider": "^0.3.0",
+    "loom-truffle-provider": "^0.8.0",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
     "truffle": "^4.1.13",

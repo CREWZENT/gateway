@@ -45,7 +45,7 @@ class DefaultName extends Component {
       this.setState({ showResult: true, submited: false });
     });
 
-    state.HrTest.events.JoinQuiz({}, (err, event) => {
+    state.HrTest.events.JoinQuiz({ filter: { quizId: this.state.quizId } }, (err, event) => {
       console.log('JoinQuiz');
       this.calculateResult();
     });
@@ -106,7 +106,7 @@ class DefaultName extends Component {
     const { state } = this.props;
 
     const tx = await state.HrTest.methods.nextQuestion(quizId).send();
-    console.log(tx);
+    console.log('NextQuestion');
 
     if (tx.blockHash) {
       if (tx.events.NextQuestion) {
@@ -116,9 +116,9 @@ class DefaultName extends Component {
         this.calculateResult();
         this.setState({ completed: true });
       }
+      this.setState({ showResult: false });
     }
-
-    this.setState({ showResult: false });
+    
   }
 
   async calculateResult() {
