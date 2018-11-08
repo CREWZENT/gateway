@@ -84,17 +84,17 @@ class DefaultName extends Component {
       }
       this.setState({ optionsList });
 
-      // let count = questionTx.questionTimeLeft;
-      // countDownInterval = setInterval(() => {
-      //   if (count > 0) {
-      //     count -= 1;
-      //     this.setState({ questionTimeLeft: count });
-      //   } else if (this.state.showResult === false) {
-      //     clearInterval(countDownInterval);
-      //     this.calculateResult();
-      //     this.setState({ showResult: true });
-      //   }
-      // }, 1000);
+      let count = questionTx.questionTimeLeft;
+      countDownInterval = setInterval(() => {
+        if (count > 0) {
+          count -= 1;
+          this.setState({ questionTimeLeft: count });
+        } else if (this.state.showResult === false) {
+          clearInterval(countDownInterval);
+          this.calculateResult();
+          this.setState({ showResult: true });
+        }
+      }, 1000);
 
     } else {
       this.calculateResult();

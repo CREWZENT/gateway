@@ -169,11 +169,15 @@ class DefaultName extends Component {
       <div className="playing">
         <div>
             <div>
+              {
+                (currentQuestion === 0 || showResult || completed) &&
               <div className="playing-header"> 
                 <h1>PIN Code</h1> 
                  <p className="playing-room-id">{quizId}</p>
               </div>
+              }
               <div className="h-line-slim"/>
+              
                 {
                   completed && 'Completed'
                 }
@@ -208,7 +212,25 @@ class DefaultName extends Component {
                   }
                   {
                     currentQuestion > 0 && !showResult && !submited &&
+                    
                     <div>
+                      <p className="current-question">Question {currentQuestion}</p>
+                      <div className="question-text">{questionText} </div>
+                      <div className="h-line-slim"/>
+                      <div className="question-time-left"> Time Left: {questionTimeLeft > 0 && questionTimeLeft} </div>
+                      <div className= "question-container">
+                        {
+                          optionsList.map((option, z) => {
+                            return (
+                              <div key={z} className = {"board-question-" + (z + 1) } onClick={() => this.submitAnswer(z)}>
+                              </div>
+                            )
+                          })
+                        }
+                      </div>
+                    </div>
+                  }
+                    {/* <div>
                       Question: {questionText} | Time Left: {questionTimeLeft > 0 && questionTimeLeft}
                       <div>
                         {
@@ -225,8 +247,7 @@ class DefaultName extends Component {
                         }
 
                       </div>
-                    </div>
-                  }
+                    </div> */}
                 </div>
               }
 
