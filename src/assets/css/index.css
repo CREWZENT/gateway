@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css?family=Quicksand:400,500");
 @font-face {
   font-family: google-san-bold;
   src: url(../font/GoogleSans-Bold.ttf);
@@ -311,5 +312,153 @@ ul {
   font-weight: bold;
   height: 52px;
   font-size: 18px;
+}
+
+.board .current-question {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-family: google-san-regular;
+  color: #5a2f5d;
+  padding-top: 15px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.board .question-text {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-family: Quicksand;
+  color: #9960a4;
+  padding-top: 5px;
+  font-weight: bold;
+  font-size: 18px;
+  margin: 10px;
+}
+
+.board .board-question-1 {
+  margin: 45px;
+  width: 100%;
+  height: 90px;
+  background-color: #28afac;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url(../img/pc_answer_1.png);
+  padding-left: 65px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: left;
+      -ms-flex-pack: left;
+          justify-content: left;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-family: Quicksand;
+  color: #ffffff;
+  border-radius: 10px;
+  margin: 5px;
+}
+
+.board .board-question-2 {
+  margin: 45px;
+  width: 100%;
+  height: 90px;
+  background-color: #d4546a;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url(../img/pc_answer_2.png);
+  padding-left: 65px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: left;
+      -ms-flex-pack: left;
+          justify-content: left;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-family: Quicksand;
+  color: #ffffff;
+  border-radius: 10px;
+  margin: 5px;
+  margin-right: 25px;
+}
+
+.board .board-question-3 {
+  margin: 45px;
+  width: 100%;
+  height: 90px;
+  background-color: #f49537;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url(../img/pc_answer_3.png);
+  padding-left: 65px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: left;
+      -ms-flex-pack: left;
+          justify-content: left;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-family: Quicksand;
+  color: #ffffff;
+  border-radius: 10px;
+  margin: 5px;
+}
+
+.board .board-question-4 {
+  margin: 45px;
+  width: 100%;
+  height: 90px;
+  background-color: #5376ad;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url(../img/pc_answer_4.png);
+  padding-left: 65px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: left;
+      -ms-flex-pack: left;
+          justify-content: left;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-family: Quicksand;
+  color: #ffffff;
+  border-radius: 10px;
+  margin: 5px;
+}
+
+.board .question-container {
+  width: 100%;
+  margin-top: 50px;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
+  grid-column-gap: 26px;
+  grid-row-gap: 16px;
+  padding-right: 60px;
+  padding-left: 60px;
+}
+
+.board .question-time-left {
+  color: #28afac;
+  font-family: Quicksand;
+  font-weight: bold;
+  text-align: center;
+  font-size: 20px;
+  margin: 15px;
 }
 /*# sourceMappingURL=index.css.map */

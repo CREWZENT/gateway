@@ -9,6 +9,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import firebase from '../FirebaseConfig';
+
 const db = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
 db.settings(settings);
@@ -83,17 +84,17 @@ class DefaultName extends Component {
       }
       this.setState({ optionsList });
 
-      let count = questionTx.questionTimeLeft;
-      countDownInterval = setInterval(() => {
-        if (count > 0) {
-          count -= 1;
-          this.setState({ questionTimeLeft: count });
-        } else if (this.state.showResult === false) {
-          clearInterval(countDownInterval);
-          this.calculateResult();
-          this.setState({ showResult: true });
-        }
-      }, 1000);
+      // let count = questionTx.questionTimeLeft;
+      // countDownInterval = setInterval(() => {
+      //   if (count > 0) {
+      //     count -= 1;
+      //     this.setState({ questionTimeLeft: count });
+      //   } else if (this.state.showResult === false) {
+      //     clearInterval(countDownInterval);
+      //     this.calculateResult();
+      //     this.setState({ showResult: true });
+      //   }
+      // }, 1000);
 
     } else {
       this.calculateResult();
@@ -158,10 +159,12 @@ class DefaultName extends Component {
       <div className="board">
         <div >
           <div>
+           {(currentQuestion === 0 || showResult || completed) &&
               <div className="playing-header"> 
                 <h1>PIN Code</h1> 
                  <p className="playing-room-id">{quizId}</p>
               </div>
+           }
               <div className="h-line-slim"/>
               {
                 completed && 'Completed'
@@ -195,13 +198,15 @@ class DefaultName extends Component {
                   {
                     currentQuestion > 0 && !showResult &&
                     <div>
-                      <p>CurrentQuestion: {currentQuestion}</p>
-                      Question: {questionText} | Time Left: {questionTimeLeft > 0 && questionTimeLeft}
-                      <div>
+                      <p className="current-question">Question {currentQuestion}</p>
+                      <div className="question-text">{questionText} </div>
+                      <div className="h-line-slim"/>
+                      <div className="question-time-left"> Time Left: {questionTimeLeft > 0 && questionTimeLeft} </div>
+                      <div className= "question-container">
                         {
                           optionsList.map((option, z) => {
                             return (
-                              <div key={z}>
+                              <div key={z} className = {"board-question-" + (z + 1) }>
                                 {option.name}
                               </div>
                             )
