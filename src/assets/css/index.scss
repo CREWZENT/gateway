@@ -4,6 +4,12 @@
   src: url(../font/GoogleSans-Bold.ttf)
 }
 
+
+@font-face {
+  font-family: google-san-regular;
+  src: url(../font/GoogleSans-Regular.ttf)
+}
+
 $deepPurple: #3b5998;
 $colororange:#f48021;
 $bd-purple: #563d7c;
@@ -67,9 +73,9 @@ ul {
 }
 
 
-
+// ******* Join Room ***********
 .joinRoom {
-  
+
   .form-group{
     position: relative;
     padding-bottom: 100px;
@@ -133,7 +139,8 @@ ul {
   
 }
 
-.playing {  
+// ******* Playing ***********
+.playing {
   .playing-header {
     width: 100%;
     color: #5f2d62;
@@ -170,5 +177,122 @@ ul {
     width: 100%;
     height: 3px;
     background: #5f2d62;
+  }
+
+  .user {
+    width: calc(100% - 20px);
+    display: inline-flex;
+    padding: 10px;
+    align-items: center;
+    justify-content: left;
+    margin-bottom: 3px;
+  }
+
+  .user-avatar {
+    width: 64px;
+    height: 64px;
+    border: 1px solid #888888;
+    border-radius: 50%;
+  }
+
+  .user-info {
+    display: inline-block;
+    margin-left: 15px;
+    font-family: google-san-regular;
+    font-weight: bold;
+    color: #5f2d62;
+    margin-left: 15px;
+  }
+
+  .h-line-slim {
+    width: 100%;
+    height: 1px;
+    background: #888888;
+  }
+}
+// ******* Board ***********
+.board {
+  .playing-header {
+    width: 100%;
+    color: #5f2d62;
+    font-family: google-san-bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+  }
+  
+  .playing-header h1 {
+    display: inline-block;
+    color: #5f2d62;
+    font-size: 28px;
+    font-family: google-san-bold;
+    margin-right: 25PX;
+    padding-bottom: 7px;
+  }
+  
+  .playing-room-id {
+    display: inline-block;
+    width: 170px;
+    height: 56px;
+    font-size: 30px;
+    color: #5f2d62;
+    border: 3px solid #5f2d62;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .h-line {
+    width: 100%;
+    height: 3px;
+    background: #5f2d62;
+  }
+
+  .user {
+    width: calc(100% - 20px);
+    display: inline-flex;
+    padding: 10px;
+    align-items: center;
+    justify-content: left;
+    margin-bottom: 3px;
+  }
+
+  .user-avatar {
+    width: 64px;
+    height: 64px;
+    border: 1px solid #888888;
+    border-radius: 50%;
+  }
+
+  .user-info {
+    display: inline-block;
+    margin-left: 15px;
+    font-family: google-san-regular;
+    font-weight: bold;
+    color: #5f2d62;
+    margin-left: 15px;
+  }
+
+  .h-line-slim {
+    width: 100%;
+    height: 1px;
+    background: #888888;
+  }
+
+  .btn-outline-info {
+    position: fixed;
+    margin-top: 10px;
+    width: 100%;
+    bottom: 0;
+    background: #5a2f5d;
+    font-family: google-san-regular;
+    border-radius: 0px;
+    border: 0px solid;
+    color: #ffffff;
+    font-weight: bold;
+    height: 52px;
+    font-size: 18px;
   }
 }

@@ -41,26 +41,26 @@ class DefaultName extends Component {
 
     this.getQuestionDetail();
     state.HrTest.events.NextQuestion({ filter: { quizId: this.state.quizId } }, (err, event) => {
-      console.log('NextQuestion');
+      //console.log('NextQuestion');
       this.setState({ showResult: false, submited: false });
       this.getQuestionDetail();
     });
 
     state.HrTest.events.SubmitedAll({ filter: { quizId: this.state.quizId } }, (err, event) => {
-      console.log('SubmitedAll');
+      //console.log('SubmitedAll');
       clearInterval(countDownInterval);
       this.calculateResult();
       this.setState({ showResult: true, submited: false });
     });
 
     state.HrTest.events.QuizComplete({ filter: { quizId: this.state.quizId } }, (err, event) => {
-      console.log('QuizComplete');
+      //console.log('QuizComplete');
       this.calculateResult();
       this.setState({ completed: true });
     });
 
     state.HrTest.events.JoinQuiz({ filter: { quizId: this.state.quizId } }, (err, event) => {
-      console.log('JoinQuiz');
+      //console.log('JoinQuiz');
       this.calculateResult();
     });
   }
@@ -173,7 +173,7 @@ class DefaultName extends Component {
                 <h1>PIN Code</h1> 
                  <p className="playing-room-id">{quizId}</p>
               </div>
-              <div className="h-line"></div>
+              <div className="h-line-slim"/>
                 {
                   completed && 'Completed'
                 }
@@ -182,10 +182,15 @@ class DefaultName extends Component {
                 <div>
                   {
                     quizUsersList.map((quizUser, i) => {
+                      console.log(quizUser.photoURL);
                       return (
-                        <div key={i}>
-                          <div style={{ 'background': 'url(' + quizUser.photoURL + ')'}}></div>
-                          <div>{quizUser.displayName} | Score: {quizUser.score} | Reward: {quizUser.reward}</div>
+                        <div>
+                        <div className="user" key={i}>
+                          <div className="user-avatar" style={{ 'background': 'url(' + quizUser.photoURL + '?width=64)'}}></div>
+                          <div className="user-info">{quizUser.displayName}</div>
+                          {/* <div className="user-info">{quizUser.displayName} | Score: {quizUser.score} | Reward: {quizUser.reward}</div> */}
+                        </div>
+                        <div className="h-line-slim"/>
                         </div>
                       )
                     })

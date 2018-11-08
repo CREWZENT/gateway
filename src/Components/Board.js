@@ -155,25 +155,29 @@ class DefaultName extends Component {
     const { state } = this.props;
     const { showResult, quizId, quizUsersList, completed, currentQuestion, quizName, questionText, questionTimeLeft, optionsList } = this.state;
     return (
-      <div className="admin container">
-        <div className="row">
-          <div className="col">
-
-            <div className="card">
-              <h1>Room Id: {quizId}</h1>
-              <p>QuizName: {quizName}</p>
+      <div className="board">
+        <div >
+          <div>
+              <div className="playing-header"> 
+                <h1>PIN Code</h1> 
+                 <p className="playing-room-id">{quizId}</p>
+              </div>
+              <div className="h-line-slim"/>
               {
                 completed && 'Completed'
               }
               {
                 (currentQuestion === 0 || showResult || completed) &&
                 <div>
-                  <h3>Users List:</h3>
                   {
                     quizUsersList.map((quizUser, i) => {
                       return (
-                        <div key={i} style={{ 'background': quizUser.address === state.user.address ? "#f1f1f1" : "" }}>
-                          {quizUser.displayName} | Score: {quizUser.score} | Reward: {quizUser.reward}
+                        <div  key={i}>
+                        <div className="user">
+                          <div className="user-avatar" style={{ 'background': 'url(' + quizUser.photoURL + '?width=64)'}}></div>
+                          <div className="user-info">{quizUser.displayName} | Score: {quizUser.score} | Reward: {quizUser.reward}</div>
+                        </div>
+                        <div className="h-line-slim"/>
                         </div>
                       )
                     })
@@ -210,7 +214,6 @@ class DefaultName extends Component {
                   }
                 </div>
               }
-            </div>
 
           </div>
         </div>
