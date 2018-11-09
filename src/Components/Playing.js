@@ -7,7 +7,6 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import firebase from '../FirebaseConfig';
 const db = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
@@ -37,30 +36,31 @@ class DefaultName extends Component {
   }
 
   componentDidMount() {
+
     const { state } = this.props;
 
     this.getQuestionDetail();
     state.HrTest.events.NextQuestion({ filter: { quizId: this.state.quizId } }, (err, event) => {
-      console.log('NextQuestion');
+      //console.log('NextQuestion');
       this.setState({ showResult: false, submited: false });
       this.getQuestionDetail();
     });
 
     state.HrTest.events.SubmitedAll({ filter: { quizId: this.state.quizId } }, (err, event) => {
-      console.log('SubmitedAll');
+      //console.log('SubmitedAll');
       clearInterval(countDownInterval);
       this.calculateResult();
       this.setState({ showResult: true, submited: false });
     });
 
     state.HrTest.events.QuizComplete({ filter: { quizId: this.state.quizId } }, (err, event) => {
-      console.log('QuizComplete');
+      //console.log('QuizComplete');
       this.calculateResult();
       this.setState({ completed: true });
     });
 
     state.HrTest.events.JoinQuiz({ filter: { quizId: this.state.quizId } }, (err, event) => {
-      console.log('JoinQuiz');
+      //console.log('JoinQuiz');
       this.calculateResult();
     });
   }
@@ -113,8 +113,6 @@ class DefaultName extends Component {
           this.setState({ showResult: true });
         }
       }, 1000);
-
-
     } else {
       this.calculateResult();
       this.setState({ showResult: true });
@@ -164,25 +162,38 @@ class DefaultName extends Component {
 
   render() {
     const { state } = this.props;
-    const { showResult, submited, quizUsersList, completed, currentQuestion, questionText, questionTimeLeft, optionsList } = this.state;
+    const { showResult, quizId, submited, quizUsersList, completed, currentQuestion, questionText, questionTimeLeft, optionsList } = this.state;
     return (
-      <div className="admin container">
-        <div className="row">
-          <div className="col">
-
-            <div className="card">
+      <div className="playing">
+        <div>
+            <div>
               {
-                completed && 'Completed'
+                (currentQuestion === 0 || showResult || completed) &&
+              <div className="playing-header"> 
+                <h1>PIN Code</h1> 
+                 <p className="playing-room-id">{quizId}</p>
+              </div>
               }
+              <div className="h-line-slim"/>
+              
+                {
+                  completed && 'Completed'
+                }
               {
                 (currentQuestion === 0 || showResult || completed) &&
                 <div>
-                  <h3>Users List:</h3>
                   {
                     quizUsersList.map((quizUser, i) => {
                       return (
-                        <div key={i} style={{ 'background': quizUser.address === state.user.address ? "#f1f1f1" : "" }}>
-                          {quizUser.displayName} | Score: {quizUser.score} | Reward: {quizUser.reward}
+                        <div key={i}>
+                        <div className="user">
+                          <div className="user-avatar" style={{ 'background': 'url(' + quizUser.photoURL + '?width=64)'}}></div>
+                          <div className="user-infos">
+                            <div className="user-info">{quizUser.displayName}</div>
+                            <div className="user-info-2">Score: {quizUser.score} | Reward: {quizUser.reward}</div>
+                          </div>
+                        </div>
+                        <div className="h-line-slim"/>
                         </div>
                       )
                     })
@@ -194,13 +205,37 @@ class DefaultName extends Component {
                 <div>
                   {
                     currentQuestion > 0 && !showResult && submited &&
-                    <div>
-                      You're too fast!!!
+                    <div className="playing-result-info">
+                      <div> You're too fast!!! </div>
+
+                      <div className="bubbles">
+                        <h1> Next Question: {questionTimeLeft > 0 && questionTimeLeft} </h1>
+                          {/* <div className="playing-time-next-question"> Next Question: {questionTimeLeft > 0 && questionTimeLeft}  </div> */}
+                      </div>
                     </div>
+
                   }
                   {
                     currentQuestion > 0 && !showResult && !submited &&
+                    
                     <div>
+                      <p className="current-question">Question {currentQuestion}</p>
+                      <div className="question-text">{questionText} </div>
+                      <div className="h-line-slim"/>
+                      <div className="question-time-left"> Time Left: {questionTimeLeft > 0 && questionTimeLeft} </div>
+                      <div className= "question-container">
+                        {
+                          optionsList.map((option, z) => {
+                            return (
+                              <div key={z} className = {"board-question-" + (z + 1) } onClick={() => this.submitAnswer(z)}>
+                              </div>
+                            )
+                          })
+                        }
+                      </div>
+                    </div>
+                  }
+                    {/* <div>
                       Question: {questionText} | Time Left: {questionTimeLeft > 0 && questionTimeLeft}
                       <div>
                         {
@@ -217,15 +252,13 @@ class DefaultName extends Component {
                         }
 
                       </div>
-                    </div>
-                  }
+                    </div> */}
                 </div>
               }
 
 
             </div>
 
-          </div>
         </div>
 
       </div>

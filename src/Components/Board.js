@@ -9,6 +9,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import firebase from '../FirebaseConfig';
+
 const db = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
 db.settings(settings);
@@ -155,25 +156,34 @@ class DefaultName extends Component {
     const { state } = this.props;
     const { showResult, quizId, quizUsersList, completed, currentQuestion, quizName, questionText, questionTimeLeft, optionsList } = this.state;
     return (
-      <div className="admin container">
-        <div className="row">
-          <div className="col">
-
-            <div className="card">
-              <h1>Room Id: {quizId}</h1>
-              <p>QuizName: {quizName}</p>
+      <div className="board">
+        <div >
+          <div>
+           {(currentQuestion === 0 || showResult || completed) &&
+              <div className="playing-header"> 
+                <h1>PIN Code</h1> 
+                 <p className="playing-room-id">{quizId}</p>
+              </div>
+           }
+              <div className="h-line-slim"/>
               {
                 completed && 'Completed'
               }
               {
                 (currentQuestion === 0 || showResult || completed) &&
                 <div>
-                  <h3>Users List:</h3>
                   {
                     quizUsersList.map((quizUser, i) => {
                       return (
-                        <div key={i} style={{ 'background': quizUser.address === state.user.address ? "#f1f1f1" : "" }}>
-                          {quizUser.displayName} | Score: {quizUser.score} | Reward: {quizUser.reward}
+                        <div  key={i}>
+                        <div className="user">
+                          <div className="user-avatar" style={{ 'background': 'url(' + quizUser.photoURL + '?width=64)'}}></div>
+                          <div className="user-infos">
+                            <div className="user-info">{quizUser.displayName}</div>
+                            <div className="user-info-2">Score: {quizUser.score} | Reward: {quizUser.reward}</div>
+                          </div>
+                        </div>
+                        <div className="h-line-slim"/>
                         </div>
                       )
                     })
@@ -191,13 +201,15 @@ class DefaultName extends Component {
                   {
                     currentQuestion > 0 && !showResult &&
                     <div>
-                      <p>CurrentQuestion: {currentQuestion}</p>
-                      Question: {questionText} | Time Left: {questionTimeLeft > 0 && questionTimeLeft}
-                      <div>
+                      <p className="current-question">Question {currentQuestion}</p>
+                      <div className="question-text">{questionText} </div>
+                      <div className="h-line-slim"/>
+                      <div className="question-time-left"> Time Left: {questionTimeLeft > 0 && questionTimeLeft} </div>
+                      <div className= "question-container">
                         {
                           optionsList.map((option, z) => {
                             return (
-                              <div key={z}>
+                              <div key={z} className = {"board-question-" + (z + 1) }>
                                 {option.name}
                               </div>
                             )
@@ -210,7 +222,6 @@ class DefaultName extends Component {
                   }
                 </div>
               }
-            </div>
 
           </div>
         </div>
