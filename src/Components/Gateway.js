@@ -132,8 +132,11 @@ class DefaultName extends Component {
 
               <div className="col-md-12 text-center">
                 <h1 className="mt-3"><b>Transfer Gateway</b></h1>
-                <button className="btn btn-success my-2 mx-2" onClick={this.deposit}>Deposit ETH</button>
-                <button className="btn btn-outline-info my-2 mx-2" onClick={this.withdraw}>Withdraw ETH</button>
+                <div>
+                  <a className="btn btn-info my-2 mx-2" href="https://faucet.metamask.io/" rel="noopener noreferrer" target="_blank">Get Free ETH</a>
+                </div>
+                <button className="btn btn-outline-success my-2 mx-2" onClick={this.deposit}>Deposit ETH</button>
+                <button className="btn btn-outline-warning my-2 mx-2" onClick={this.withdraw}>Withdraw ETH</button>
               </div>
             </div>
 
