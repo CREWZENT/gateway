@@ -130,7 +130,7 @@ class DefaultName extends Component {
                                   return (
                                     <div className="text-left" key={i}>
                                       <img className="profile" src={quizUser.photoURL} alt="" />
-                                      <b> {quizUser.displayName}</b> | Score: {quizUser.score} | Reward: {quizUser.reward}
+                                      <b> {quizUser.displayName}</b> | Score: {quizUser.score} | Reward: {quizUser.reward/10**18}
                                     </div>
                                   )
                                 })

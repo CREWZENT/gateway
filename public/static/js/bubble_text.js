@@ -3,7 +3,6 @@
 
 
 let checkBubbles = setInterval(()=>{
-    console.log($('.bubbles').width());
     if ($('.bubbles').width() !== null && $('.bubbles').width() > 0) {
         clearInterval(checkBubbles);
         startBubbles();

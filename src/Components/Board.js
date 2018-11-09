@@ -40,14 +40,14 @@ class DefaultName extends Component {
     this.getQuestionDetail();
 
     state.HrTest.events.SubmitedAll({ filter: { quizId: this.state.quizId } }, (err, event) => {
-      console.log('SubmitedAll');
+      // console.log('SubmitedAll');
       clearInterval(countDownInterval);
       this.calculateResult();
       this.setState({ showResult: true, submited: false });
     });
 
     state.HrTest.events.JoinQuiz({ filter: { quizId: this.state.quizId } }, (err, event) => {
-      console.log('JoinQuiz');
+      // console.log('JoinQuiz');
       this.calculateResult();
     });
   }
@@ -107,7 +107,7 @@ class DefaultName extends Component {
     const { state } = this.props;
 
     const tx = await state.HrTest.methods.nextQuestion(quizId).send();
-    console.log('NextQuestion');
+    // console.log('NextQuestion');
 
     if (tx.blockHash) {
       if (tx.events.NextQuestion) {
@@ -123,7 +123,7 @@ class DefaultName extends Component {
   }
 
   async calculateResult() {
-    console.log("Calculate result");
+    // console.log("Calculate result");
     const { state } = this.props;
     const { quizId } = this.state;
 
@@ -153,8 +153,8 @@ class DefaultName extends Component {
   }
 
   render() {
-    const { state } = this.props;
-    const { showResult, quizId, quizUsersList, completed, currentQuestion, quizName, questionText, questionTimeLeft, optionsList } = this.state;
+    
+    const { showResult, quizId, quizUsersList, completed, currentQuestion, questionText, questionTimeLeft, optionsList } = this.state;
     return (
       <div className="board">
         <div >
@@ -167,7 +167,8 @@ class DefaultName extends Component {
            }
               <div className="h-line-slim"/>
               {
-                completed && 'Completed'
+                completed &&
+                <p className="text-center mt-2"><b>Quiz Completed</b></p>
               }
               {
                 (currentQuestion === 0 || showResult || completed) &&
@@ -180,7 +181,7 @@ class DefaultName extends Component {
                           <div className="user-avatar" style={{ 'background': 'url(' + quizUser.photoURL + '?width=64)'}}></div>
                           <div className="user-infos">
                             <div className="user-info">{quizUser.displayName}</div>
-                            <div className="user-info-2">Score: {quizUser.score} | Reward: {quizUser.reward}</div>
+                            <div className="user-info-2">Score: {quizUser.score} | Reward: {quizUser.reward/10**18}</div>
                           </div>
                         </div>
                         <div className="h-line-slim"/>

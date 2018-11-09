@@ -125,12 +125,12 @@ class DefaultName extends Component {
     const tx = await state.HrTest.methods.submitAnswer(quizId, currentQuestionId, choosedOption).send();
     if (tx.blockHash) {
       this.setState({ submited: true });
-      console.log("SubmitAnswer");
+      // console.log("SubmitAnswer");
     }
   }
 
   async calculateResult() {
-    console.log("Calculate result");
+    // console.log("Calculate result");
 
     const { state } = this.props;
     const { quizId } = this.state;
@@ -161,7 +161,6 @@ class DefaultName extends Component {
   }
 
   render() {
-    const { state } = this.props;
     const { showResult, quizId, submited, quizUsersList, completed, currentQuestion, questionText, questionTimeLeft, optionsList } = this.state;
     return (
       <div className="playing">
@@ -190,7 +189,7 @@ class DefaultName extends Component {
                           <div className="user-avatar" style={{ 'background': 'url(' + quizUser.photoURL + '?width=64)'}}></div>
                           <div className="user-infos">
                             <div className="user-info">{quizUser.displayName}</div>
-                            <div className="user-info-2">Score: {quizUser.score} | Reward: {quizUser.reward}</div>
+                            <div className="user-info-2">Score: {quizUser.score} | Reward: {quizUser.reward/10**18}</div>
                           </div>
                         </div>
                         <div className="h-line-slim"/>
