@@ -55,7 +55,7 @@ class DefaultName extends Component {
         const tx = await state.HrTest.methods.joinQuiz(
             this.state.quizId
         ).send();
-        if(tx.blockHash) {
+        if (tx.blockHash) {
             console.log(tx);
             window.location = `/playing/${this.state.quizId}`;
         }
@@ -79,7 +79,10 @@ class DefaultName extends Component {
                                     <h3 className="card-title">Facebook Login Requirement</h3>
                                     <hr />
                                     You haven't logged in.
+                                    <div>
+                                        <button className="btn btn-primary" onClick={this.signIn}>Facebook Login</button>
                                     </div>
+                                </div>
                             </div>
                         </div>
                         <div className="col-sm-3"></div>
