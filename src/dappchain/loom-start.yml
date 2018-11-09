@@ -1,0 +1,12 @@
+apps:
+  - script: .start
+    name: loom-start
+    cwd: ./
+    exec_interpreter: bash
+    exec_mode: fork_mode
+    watch: false
+    log_file: loom-all.log
+    out_file: loom-out.log
+    error_file: loom-err.log
+    merge_logs: true
+    

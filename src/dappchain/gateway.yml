@@ -1,0 +1,9 @@
+apps:
+  - script: bin/dev
+    name: gateway
+    cwd: ./
+    watch: false
+    log_file: gateway-all.log
+    out_file: gateway-out.log
+    error_file: gateway-err.log
+    merge_logs: true

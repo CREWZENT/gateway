@@ -1,0 +1,7 @@
+pm2 delete all
+sudo pkill main
+sh .reset
+pm2 start loom-start.yml
+npm run deploy
+pm2 start gateway.yml
+cd ../../ && pm2 start main.yml

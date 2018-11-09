@@ -1,0 +1,13 @@
+apps:
+  - script: .main
+    name: main
+    cwd: ./
+    exec_interpreter: bash
+    exec_mode: fork_mode
+    watch: false
+    autorestart: false
+    log_file: main-all.log
+    out_file: main-out.log
+    error_file: main-err.log
+    merge_logs: true
+    
