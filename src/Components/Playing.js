@@ -7,8 +7,6 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import $ from 'jquery'; 
-
 import firebase from '../FirebaseConfig';
 const db = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
@@ -38,8 +36,6 @@ class DefaultName extends Component {
   }
 
   componentDidMount() {
-
-    console.log($);
 
     const { state } = this.props;
 
@@ -117,8 +113,6 @@ class DefaultName extends Component {
           this.setState({ showResult: true });
         }
       }, 1000);
-
-
     } else {
       this.calculateResult();
       this.setState({ showResult: true });
@@ -129,7 +123,6 @@ class DefaultName extends Component {
     const { state } = this.props;
     const { quizId, currentQuestionId } = this.state;
     const tx = await state.HrTest.methods.submitAnswer(quizId, currentQuestionId, choosedOption).send();
-    console.log(tx);
     if (tx.blockHash) {
       this.setState({ submited: true });
       console.log("SubmitAnswer");
@@ -214,7 +207,11 @@ class DefaultName extends Component {
                     currentQuestion > 0 && !showResult && submited &&
                     <div className="playing-result-info">
                       <div> You're too fast!!! </div>
-                      <div className="playing-time-next-question"> Next Question: {questionTimeLeft > 0 && questionTimeLeft}  </div>
+
+                      <div className="bubbles">
+                        <h1> Next Question: {questionTimeLeft > 0 && questionTimeLeft} </h1>
+                          {/* <div className="playing-time-next-question"> Next Question: {questionTimeLeft > 0 && questionTimeLeft}  </div> */}
+                      </div>
                     </div>
 
                   }

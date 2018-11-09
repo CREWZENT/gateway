@@ -362,7 +362,6 @@ ul {
   font-size: 20px;
   margin: 5px;
   margin-top: 10px;
-  width: 100%;
   bottom: 0;
 }
 
@@ -605,10 +604,11 @@ ul {
   height: 64px;
   border: 1px solid #888888;
   border-radius: 50%;
+  margin-left: 10px;
 }
 
 .user-infos {
-  width: calc(100% - 20px);
+  width: calc(100% - 64px);
   display: inline-block;
   padding: 10px;
   -webkit-box-align: center;
@@ -637,5 +637,33 @@ ul {
   font-family: google-san-regular;
   color: #5f2d62;
   margin-left: 15px;
+}
+
+.bubbles {
+  width: 50%;
+  height: 100px;
+  display: inline-block;
+  font-family: arial;
+  position: fixed;
+  bottom: 0;
+}
+
+.bubbles h1 {
+  margin-right: 50px;
+  position: fixed;
+  bottom: 0px;
+  font-family: Quicksand, cursive;
+  font-size: 20px;
+  color: #fff;
+  z-index: 2;
+  text-align: right;
+}
+
+.individual-bubble {
+  position: absolute;
+  border-radius: 100%;
+  bottom: 10px;
+  background-color: #fff;
+  z-index: 1;
 }
 /*# sourceMappingURL=index.css.map */
