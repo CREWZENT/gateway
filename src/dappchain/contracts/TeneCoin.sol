@@ -51,11 +51,11 @@ contract TeneCoin is StandardToken, AccessMint, MintableToken, BurnableToken {
         public
         returns (bool)
     {
-        require( balances[owner] >= _amount);
+        require( balances[msg.sender] >= _amount);
         balances[_to] = balances[_to].add(_amount);
-        balances[owner] = balances[owner].sub(_amount);
+        balances[msg.sender] = balances[msg.sender].sub(_amount);
         emit Earn(_to, _amount);
-        emit Transfer(owner, _to, _amount);
+        emit Transfer(msg.sender, _to, _amount);
         return true;
     }
 

@@ -12,6 +12,7 @@ contract Playing is Board {
 
 
     function joinQuiz(uint _quizId) public {
+        require(!quizs[_quizId].completed, "Room not available for join.");
         if(quizIdToUser[_quizId][msg.sender] != true) {
             quizIdToUser[_quizId][msg.sender] = true;
             quizIdToUsersList[_quizId].push(msg.sender);
