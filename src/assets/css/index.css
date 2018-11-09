@@ -79,4 +79,8 @@ ul {
   text-decoration: underline;
   cursor: pointer;
 }
+
+.analytic .profile {
+  border-radius: 25px;
+}
 /*# sourceMappingURL=index.css.map */

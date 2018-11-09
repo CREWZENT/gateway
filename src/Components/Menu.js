@@ -61,6 +61,9 @@ class DefaultName extends Component {
                             <li className={"nav-item" + (window.location.pathname.indexOf('/templates') !== -1 ? " active" : "")}>
                                 <a className="nav-link" href="/templates">Templates</a>
                             </li>
+                            <li className={"nav-item" + (window.location.pathname.indexOf('/analytic') !== -1 ? " active" : "")}>
+                                <a className="nav-link" href="/analytic">Analytic</a>
+                            </li>
                         </ul>
 
                         {

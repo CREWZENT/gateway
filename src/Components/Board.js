@@ -134,7 +134,7 @@ class DefaultName extends Component {
       quizUser.address = quizUsers[i];
       quizUser.score = await state.HrTest.methods.getQuizUserScore(quizId, quizUser.address).call();
       quizUser.reward = await state.HrTest.methods.getQuizUserReward(quizId, quizUser.address).call();
-
+      
       await new Promise((resolve, reject) => {
         db.collection('users').where("address", "==", quizUser.address.toLowerCase()).limit(1).get().then((querySnapshot) => {
           querySnapshot.forEach(async (doc) => {

@@ -19,6 +19,11 @@ const db = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
 db.settings(settings);
 
+const Analytic = Loadable({
+    loader: () => import('./Components/Analytic'),
+    loading: Loading
+});
+
 const Gateway = Loadable({
     loader: () => import('./Components/Gateway'),
     loading: Loading
@@ -288,6 +293,11 @@ class Root extends Component {
           }
 
           <Switch>
+
+            {
+              state.user && state.user.mainAddress && state.user.mainAddress.toString().length > 1 &&
+              <Route path="/analytic" component={Analytic} />
+            }
 
             {
               state.user && state.user.mainAddress && state.user.mainAddress.toString().length > 1 &&
