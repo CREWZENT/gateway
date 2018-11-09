@@ -41,24 +41,31 @@ class DefaultName extends Component {
     }
 
     const histories = [];
-    state.Gateway.events.allEvents({
+
+    state.Gateway.getPastEvents('Deposit', {
       fromBlock: 0,
       toBlock: 'latest'
-    }, async (err, tx) => {
-      if (tx.event === "Deposit" || tx.event === "WithdrawReceived") {
-        await new Promise((resolve, reject) => {
-          db.collection('users').where("address", "==", tx.returnValues.sideAddress.toLowerCase()).limit(1).get().then((querySnapshot) => {
-            querySnapshot.forEach(async (doc) => {
-              tx.user = doc.data();
-              resolve();
+    }, async (err, txs) => {
+      if (txs) {
+        for (let i = 0; i < txs.length; i++) {
+          let tx = txs[i];
+          new Promise((resolve, reject) => {
+            db.collection('users').where("address", "==", tx.returnValues.sideAddress.toLowerCase()).limit(1).get().then((querySnapshot) => {
+              if(!querySnapshot.length) {
+                resolve();
+              }
+              querySnapshot.forEach(async (doc) => {
+                tx.user = doc.data();
+                histories.push(tx);
+                this.setState({ histories })
+                resolve();
+              })
             })
           })
-        })
-        histories.push(tx);
+        }
+        
       }
-      this.setState({ histories })
-
-    });
+    })
 
   }
 
@@ -139,9 +146,9 @@ class DefaultName extends Component {
                         <div key={i} className="card historyCard">
                           <div className="card-header" id={"headingThree"}>
                             <h5 className="mb-0 text-left">
-                              <img className="profile" src={tx.user.photoURL} alt=""/>
+                              <img className="profile" src={tx.user.photoURL} alt="" />
                               <button className="btn btn-link collapsed" data-toggle="collapse" data-target={`#collapse${i}`} aria-expanded="false" aria-controls="collapseThree">
-                                <b>{tx.user.displayName}</b> {tx.event === 'Deposit' ? 'deposit' : 'withdraw'} {tx.returnValues.ETH / 10 ** 18} ETH
+                                <small><b>{tx.user.displayName}</b> {tx.event === 'Deposit' ? 'deposit' : 'withdraw'} {tx.returnValues.ETH / 10 ** 18} ETH</small>
                               </button>
                             </h5>
                           </div>
