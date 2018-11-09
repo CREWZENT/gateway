@@ -178,7 +178,10 @@ class DefaultName extends Component {
                         <div  key={i}>
                         <div className="user">
                           <div className="user-avatar" style={{ 'background': 'url(' + quizUser.photoURL + '?width=64)'}}></div>
-                          <div className="user-info">{quizUser.displayName} | Score: {quizUser.score} | Reward: {quizUser.reward}</div>
+                          <div className="user-infos">
+                            <div className="user-info">{quizUser.displayName}</div>
+                            <div className="user-info-2">Score: {quizUser.score} | Reward: {quizUser.reward}</div>
+                          </div>
                         </div>
                         <div className="h-line-slim"/>
                         </div>

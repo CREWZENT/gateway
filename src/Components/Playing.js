@@ -7,6 +7,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import $ from 'jquery'; 
 
 import firebase from '../FirebaseConfig';
 const db = firebase.firestore();
@@ -37,6 +38,9 @@ class DefaultName extends Component {
   }
 
   componentDidMount() {
+
+    console.log($);
+
     const { state } = this.props;
 
     this.getQuestionDetail();
@@ -125,6 +129,7 @@ class DefaultName extends Component {
     const { state } = this.props;
     const { quizId, currentQuestionId } = this.state;
     const tx = await state.HrTest.methods.submitAnswer(quizId, currentQuestionId, choosedOption).send();
+    console.log(tx);
     if (tx.blockHash) {
       this.setState({ submited: true });
       console.log("SubmitAnswer");
@@ -186,13 +191,14 @@ class DefaultName extends Component {
                 <div>
                   {
                     quizUsersList.map((quizUser, i) => {
-                      console.log(quizUser.photoURL);
                       return (
                         <div key={i}>
                         <div className="user">
                           <div className="user-avatar" style={{ 'background': 'url(' + quizUser.photoURL + '?width=64)'}}></div>
-                          <div className="user-info">{quizUser.displayName}</div>
-                          {/* <div className="user-info">{quizUser.displayName} | Score: {quizUser.score} | Reward: {quizUser.reward}</div> */}
+                          <div className="user-infos">
+                            <div className="user-info">{quizUser.displayName}</div>
+                            <div className="user-info-2">Score: {quizUser.score} | Reward: {quizUser.reward}</div>
+                          </div>
                         </div>
                         <div className="h-line-slim"/>
                         </div>
@@ -206,9 +212,11 @@ class DefaultName extends Component {
                 <div>
                   {
                     currentQuestion > 0 && !showResult && submited &&
-                    <div>
-                      You're too fast!!!
+                    <div className="playing-result-info">
+                      <div> You're too fast!!! </div>
+                      <div className="playing-time-next-question"> Next Question: {questionTimeLeft > 0 && questionTimeLeft}  </div>
                     </div>
+
                   }
                   {
                     currentQuestion > 0 && !showResult && !submited &&
