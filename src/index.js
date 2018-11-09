@@ -265,7 +265,7 @@ class Root extends Component {
     const { dispatch } = this.props;
 
     let ABI;
-    const contractAddress = "0x2981d917552395fc06cabb99cbc16444868188e8"
+    const contractAddress = "0x6eafe71984d153a299a6030e75d43ac001ff4ecb"
     await fetch(`http://api-ropsten.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}&format=raw`)
       .then(res => res.json())
       .then(res => {
