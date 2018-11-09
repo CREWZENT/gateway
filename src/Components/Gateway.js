@@ -54,8 +54,6 @@ class DefaultName extends Component {
             })
           })
         })
-        console.log(tx);
-        
         histories.push(tx);
       }
       this.setState({ histories })

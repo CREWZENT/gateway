@@ -75,7 +75,7 @@ class DefaultName extends Component {
                         {
                             state.Gateway &&
                             <div>
-                                <a className="btn btn-outline-warning my-2 mx-2" style={{ 'color': 'white' }}>TeneCoin: {state.balance}</a>
+                                <button className="btn btn-outline-warning my-2 mx-2" style={{ 'color': 'white' }}>TeneCoin: {state.balance}</button>
                             </div>
                         }
                         {

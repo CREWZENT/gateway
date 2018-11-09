@@ -165,3 +165,7 @@ var server = app.listen(8081, function () {
   var port = server.address().port
   console.log("GatewayServer listening at http://%s:%s", host, port)
 })
+
+server.on('error', (err) => {
+  console.log(JSON.stringify(err));
+});
