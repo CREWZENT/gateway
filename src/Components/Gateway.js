@@ -42,28 +42,30 @@ class DefaultName extends Component {
 
     const histories = [];
 
-    state.Gateway.getPastEvents('Deposit', {
+    state.Gateway.getPastEvents('allEvents', {
       fromBlock: 0,
       toBlock: 'latest'
     }, async (err, txs) => {
       if (txs) {
         for (let i = 0; i < txs.length; i++) {
           let tx = txs[i];
-          new Promise((resolve, reject) => {
-            db.collection('users').where("address", "==", tx.returnValues.sideAddress.toLowerCase()).limit(1).get().then((querySnapshot) => {
-              if(!querySnapshot.length) {
-                resolve();
-              }
-              querySnapshot.forEach(async (doc) => {
-                tx.user = doc.data();
-                histories.push(tx);
-                this.setState({ histories })
-                resolve();
+          if (tx.event === 'Deposit' || tx.event === 'WithdrawReceived') {
+            new Promise((resolve, reject) => {
+              db.collection('users').where("address", "==", tx.returnValues.sideAddress.toLowerCase()).limit(1).get().then((querySnapshot) => {
+                if (!querySnapshot.length) {
+                  resolve();
+                }
+                querySnapshot.forEach(async (doc) => {
+                  tx.user = doc.data();
+                  histories.push(tx);
+                  this.setState({ histories })
+                  resolve();
+                })
               })
             })
-          })
+          }
         }
-        
+
       }
     })
 
