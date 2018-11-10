@@ -3,6 +3,11 @@ pragma solidity ^0.4.23;
 import "../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./TeneCoin.sol";
 
+/**
+* @title Template
+* @dev Allows anyone create room from existing template
+* @author Brian Dhang
+*/
 contract Template is Ownable {
 
     TeneCoin teneCoinContract;
@@ -37,7 +42,7 @@ contract Template is Ownable {
     event CreateQuiz(uint indexed quizId);
 
     /**
-     * Set tene coin address
+     * Set TeneCoin Address
      * Allow crypttorun connect to TeneCoin
      * @param teneAddress address
      */
@@ -45,6 +50,12 @@ contract Template is Ownable {
         teneCoinContract = TeneCoin(teneAddress);
     }
 
+    /**
+     * Create Quiz
+     * Allow anyone create room
+     * @param _quizName string Name of the room
+     * @param _reward uint Number of TeneCoin to give the best player 
+     */
     function createQuiz(string _quizName, uint _reward) public {
         uint _quizId = quizs.push(Quiz(_quizName, false, 0, _reward, msg.sender)) - 1;
         emit CreateQuiz(_quizId);
@@ -54,6 +65,19 @@ contract Template is Ownable {
         teneCoinContract.transferFrom(msg.sender, this, _reward);       // Send tene to the contract
     }
 
+    /**
+     * Create Question
+     * Allow anyone create question from existing room
+     * @param _quizId uint PIN of room
+     * @param _timeLimit uint Time limit for answer
+     * @param _scoreArray uint[] Score for options list
+     * @param _maxScore uint Max score for this question
+     * @param _questionText string Question text
+     * @param _option0 string Option text 1
+     * @param _option1 string Option text 2
+     * @param _option2 string Option text 3
+     * @param _option3 string Option text 4
+     */
     function createQuestion(
         uint _quizId,
         uint _timeLimit,

@@ -5,7 +5,10 @@ import "../node_modules/zeppelin-solidity/contracts/token/ERC20/MintableToken.so
 import "./AccessMint.sol";
 import "../node_modules/zeppelin-solidity/contracts/token/ERC20/BurnableToken.sol";
 
-
+/**
+ * @title TeneCoin
+ * @dev Allows user deposit and withdraw ETH
+ */
 contract TeneCoin is StandardToken, AccessMint, MintableToken, BurnableToken {
     
     string public name;

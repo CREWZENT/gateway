@@ -2,6 +2,11 @@ pragma solidity ^0.4.23;
 
 import "./Board.sol";
 
+/**
+* @title Playing
+* @dev Allows player join room, submit answer
+* @author Brian Dhang
+*/
 contract Playing is Board {
 
     mapping(uint => mapping(address => bool)) quizIdToUser;
@@ -10,7 +15,11 @@ contract Playing is Board {
     event SubmitAnswer(uint indexed quizId, uint indexed questionId, uint score, uint totalScore);
     event SubmitedAll(uint indexed quizId, uint questionId);
 
-
+    /**
+    * Join Quiz
+    * @dev Allow anyone join room if it not finished
+    * @param _quizId uint PIN of room
+    */
     function joinQuiz(uint _quizId) public {
         require(!quizs[_quizId].completed, "Room not available for join.");
         if(quizIdToUser[_quizId][msg.sender] != true) {
@@ -20,6 +29,13 @@ contract Playing is Board {
         emit JoinQuiz(_quizId, msg.sender);
     }
 
+    /**
+    * Join Quiz
+    * @dev Allow player submit question
+    * @param _quizId uint PIN of room
+    * @param _questionId uint Id of question
+    * @param _selectedOption uint Index of option in the list
+    */
     function submitAnswer(uint _quizId, uint _questionId, uint _selectedOption) public {
         require(quizIdToUser[_quizId][msg.sender] == true, "User have not joined.");
         uint _currentQuestion = quizs[_quizId].currentQuestion;

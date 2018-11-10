@@ -3,6 +3,11 @@ pragma solidity ^0.4.23;
 
 import "./Template.sol";
 
+/**
+* @title Board
+* @dev Allows host people control room
+* @author Brian Dhang
+*/
 contract Board is Template {
 
     mapping(uint => bool) questionIdToSubmitedAll;
@@ -16,7 +21,11 @@ contract Board is Template {
     event QuizComplete(uint indexed quizId);
     event GetReward(uint indexed quizId, address user, uint reward);
 
-    
+    /**
+    * Next Question
+    * @dev Host people next question
+    * @param _quizId uint PIN of room
+    */
     function nextQuestion(uint _quizId) public {
         require(quizIdToOwner[_quizId] == msg.sender, "Don't have permission.");
         require(quizIdToUsersList[_quizId].length > 0, "Don't have any player.");
@@ -59,18 +68,40 @@ contract Board is Template {
         }
     }
 
+    /**
+    * Get Quiz Users List 
+    * @dev Allows anyone get list users in room
+    * @param _quizId uint PIN of room
+    */
     function getQuizUsersList(uint _quizId) public view returns (address[]) {
         return quizIdToUsersList[_quizId];
     }
 
+    /**
+    * Get Quiz User Score 
+    * @dev Allows anyone get user score in room
+    * @param _quizId uint PIN of room
+    * @param _user address
+    */
     function getQuizUserScore(uint _quizId, address _user) public view returns (uint) {
         return quizIdToUserScore[_quizId][_user];
     }
 
+    /**
+    * Get Quiz User Reward 
+    * @dev Allows anyone get user reward in room
+    * @param _quizId uint PIN of room
+    * @param _user address
+    */
     function getQuizUserReward(uint _quizId, address _user) public view returns (uint) {
         return quizIdToUserReward[_quizId][_user];
     }
 
+    /**
+    * Get Quiz User Reward 
+    * @dev Allows anyone get user reward in room
+    * @param _quizId uint PIN of room
+    */
     function getCurrentQuestionId(uint _quizId) public view returns (uint) {
         uint _currentQuestion = quizs[_quizId].currentQuestion;
         if(_currentQuestion > 0) {
@@ -79,14 +110,28 @@ contract Board is Template {
         }
     }
 
+    /**
+    * Get Server Time
+    * @dev Allows anyone get server time
+    */
     function getServerTime() public view returns (uint) {
         return now;
     }
 
+    /**
+    * Check User Submited
+    * @dev Allows anyone check user submited question
+    * @param _questionId uint Id of question
+    */
     function checkUserSubmited(uint _questionId) public view returns (bool) {
         return questionIdToUserSubmited[_questionId][msg.sender];
     }
 
+    /**
+    * Get Current OptionIds
+    * @dev Allows anyone get current list optionIds in room
+    * @param _quizId uint PIN of room
+    */
     function getCurrentOptionIds(uint _quizId) public view returns (uint[]) {
         uint _currentQuestion = quizs[_quizId].currentQuestion;
         if(_currentQuestion > 0) {
