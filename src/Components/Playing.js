@@ -112,16 +112,16 @@ class DefaultName extends Component {
 
       let count = questionTx.questionTimeLeft;
 
-      // countDownInterval = setInterval(() => {
-      //   if (count > 0) {
-      //     count -= 1;
-      //     this.setState({ questionTimeLeft: count });
-      //   } else if (this.state.showResult === false) {
-      //     clearInterval(countDownInterval);
-      //     this.calculateResult();
-      //     this.setState({ showResult: true });
-      //   }
-      // }, 1000);
+      countDownInterval = setInterval(() => {
+        if (count > 0) {
+          count -= 1;
+          this.setState({ questionTimeLeft: count });
+        } else if (this.state.showResult === false) {
+          clearInterval(countDownInterval);
+          this.calculateResult();
+          this.setState({ showResult: true });
+        }
+      }, 1000);
     } else {
       this.calculateResult();
       this.setState({ showResult: true });
@@ -179,7 +179,7 @@ class DefaultName extends Component {
         <div>
             <div>
               {
-                (currentQuestion === 0 || showResult || completed) &&
+                (currentQuestion === 0) &&
               <div className="playing-header"> 
                 <h1>PIN Code</h1> 
                  <p className="playing-room-id">{quizId}</p>
