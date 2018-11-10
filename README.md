@@ -1,8 +1,9 @@
 # Transfer Gateway
 
+> Transfer between Ethereum and any Economy Token in fast, security way without lose value. We use Transfer Gateway for demo project `Quiz Portal`.
+
 ![Cover Image](http://gateway.teneocto.io/static/img/cover.png)
 
-> Connecting Ethereum to a Token Ecosystem is available quickly, securely, and safely
 
 ## 1 Required
 Plarform: Linux, Mac OS
