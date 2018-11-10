@@ -1,5 +1,9 @@
 # Transfer Gateway
 
+![Cover Image](http://gateway.teneocto.io/static/img/cover.png)
+
+> Connecting Ethereum to a Token Ecosystem is available quickly, securely, and safely
+
 ## 1 Required
 Plarform: Linux, Mac OS
 
@@ -99,3 +103,7 @@ $ cd src/dappchain
 $ sh .pm2
 $ cd ../../ && npm run build
 ```
+
+Created by Brian Dhang. Powered by coffee, anime, LoomSDK and love.
+
+© 2018 Teneocto Inc. All rights reserved.
