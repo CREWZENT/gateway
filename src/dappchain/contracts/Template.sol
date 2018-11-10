@@ -50,7 +50,6 @@ contract Template is Ownable {
         emit CreateQuiz(_quizId);
         quizIdToOwner[_quizId] = msg.sender;
 
-        require(_reward >= 10**16, "Reward must be greater than 0.01 TNC");
         require(teneCoinContract.allowance(msg.sender, this) >= _reward, "Not approve enough money for reward");
         teneCoinContract.transferFrom(msg.sender, this, _reward);       // Send tene to the contract
     }

@@ -1,10 +1,12 @@
 # Transfer Gateway
 
 ## 1 Required
+Plarform: Linux, Mac OS
+
 Prepare first time:
 ```
 $ cd src/dappchain
-$ sh .install-linux (for Linux)
+$ sh .install
 $ npm i
 $ cd ../../
 $ npm i
@@ -20,14 +22,7 @@ $ sh .reset (first time or delete old data)
 $ sh .start
 ```
 
-### 2.2 Test smart contract (Open new terminal)
-Run:
-```
-$ cd src/dappchain
-$ npm run test
-```
-
-### 2.3 Deploy smart contract (Open new terminal)
+### 2.2 Deploy smart contract (Open new terminal)
 Deploy:
 ```
 $ cd src/dappchain
@@ -35,14 +30,14 @@ $ npm run deploy
 $ npm run deploy:reset (delete old data)
 ```
 
-### 2.4 Transfer gateway (Open new terminal)
+### 2.3 Transfer gateway (Open new terminal)
 Run:
 ```
 $ cd src/dappchain
 $ npm run gateway
 ```
 
-### 2.5 Run webclient (Open new terminal)
+### 2.4 Run webclient (Open new terminal)
 Run:
 ```
 $ npm start

@@ -112,7 +112,7 @@ class DefaultName extends Component {
                             "name": "Bạn là người linh hoạt và nhạy bén hay điềm tĩnh, điềm đạm?",
                             "type": "J"
                         },
-                        
+
                     ]
                 },
                 {
@@ -539,8 +539,13 @@ class DefaultName extends Component {
     }
 
     async createQuiz(quiz) {
-        var depositValue = prompt("Please enter the ETH value to deposit", 0.01);
-        if (Number(depositValue) >= 0.01) {
+        const { state } = this.props;
+        var depositValue = prompt("Please enter reward number (TeneCoin) to give the best player:", 0);
+        if(!depositValue) {
+            return;
+        }
+        
+        if (Number(depositValue) < state.balance) {
             const { state } = this.props;
             try {
                 const tx1 = await state.TeneCoin.methods.approve(state.HrTestAddress, BigNumber(depositValue * 10 ** 18).toString(10)).send();
@@ -552,8 +557,9 @@ class DefaultName extends Component {
                 }
             } catch (error) {
                 alert(error);
-                // this.createQuiz(quiz);
             }
+        } else {
+            alert("You don't have enough TeneCoin.")
         }
     }
 

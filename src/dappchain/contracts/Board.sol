@@ -18,7 +18,8 @@ contract Board is Template {
 
     
     function nextQuestion(uint _quizId) public {
-        require(quizIdToOwner[_quizId] == msg.sender, "Don't have access.");
+        require(quizIdToOwner[_quizId] == msg.sender, "Don't have permission.");
+        require(quizIdToUsersList[_quizId].length > 0, "Don't have any player.");
 
         if (quizs[_quizId].currentQuestion < quizIdToQuestionIds[_quizId].length) {
             
