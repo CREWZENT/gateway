@@ -149,6 +149,9 @@ class DefaultName extends Component {
       quizUsersList.push(quizUser)
     }
 
+    quizUsersList.sort((a, b) => {
+      return b.score - a.score;
+    });
     this.setState({ quizUsersList });
   }
 

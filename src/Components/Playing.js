@@ -13,6 +13,15 @@ const settings = { timestampsInSnapshots: true };
 db.settings(settings);
 let countDownInterval;
 
+let listForFast = ['You are so fast!!!', 
+                    'Fast and Furious 10 ???', 
+                    'Please wait another player...', 
+                    'Sometime random is better, right?',
+                    'Overconfident can destroy you!!',
+                    'You need to wait...dont sleep...zZZ',
+                    'Let see the time countdown!',
+                    'Dog Cat Pig Chicken!!!']
+
 class DefaultName extends Component {
 
   constructor(props) {
@@ -103,16 +112,16 @@ class DefaultName extends Component {
 
       let count = questionTx.questionTimeLeft;
 
-      countDownInterval = setInterval(() => {
-        if (count > 0) {
-          count -= 1;
-          this.setState({ questionTimeLeft: count });
-        } else if (this.state.showResult === false) {
-          clearInterval(countDownInterval);
-          this.calculateResult();
-          this.setState({ showResult: true });
-        }
-      }, 1000);
+      // countDownInterval = setInterval(() => {
+      //   if (count > 0) {
+      //     count -= 1;
+      //     this.setState({ questionTimeLeft: count });
+      //   } else if (this.state.showResult === false) {
+      //     clearInterval(countDownInterval);
+      //     this.calculateResult();
+      //     this.setState({ showResult: true });
+      //   }
+      // }, 1000);
     } else {
       this.calculateResult();
       this.setState({ showResult: true });
@@ -157,6 +166,9 @@ class DefaultName extends Component {
       quizUsersList.push(quizUser)
     }
 
+    quizUsersList.sort((a, b) => {
+      return b.score - a.score;
+    });
     this.setState({ quizUsersList });
   }
 
@@ -182,7 +194,8 @@ class DefaultName extends Component {
                 (currentQuestion === 0 || showResult || completed) &&
                 <div>
                   {
-                    quizUsersList.map((quizUser, i) => {
+                    quizUsersList
+                        .map((quizUser, i) => {
                       return (
                         <div key={i}>
                         <div className="user">
@@ -205,7 +218,7 @@ class DefaultName extends Component {
                   {
                     currentQuestion > 0 && !showResult && submited &&
                     <div className="playing-result-info">
-                      <div> You're too fast!!! </div>
+                      <div className="playing-fast-text">{listForFast[Math.floor(Math.random() * Math.floor(8))]}</div>
 
                       <div className="bubbles">
                         <h1> Next Question: {questionTimeLeft > 0 && questionTimeLeft} </h1>
