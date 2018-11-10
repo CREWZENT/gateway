@@ -21,6 +21,7 @@ let listForFast = ['You are so fast!!!',
                     'You need to wait...dont sleep...zZZ',
                     'Let see the time countdown!',
                     'Dog Cat Pig Chicken!!!']
+let fastItem = listForFast[Math.floor(Math.random() * Math.floor(8))];
 
 class DefaultName extends Component {
 
@@ -136,6 +137,7 @@ class DefaultName extends Component {
       this.setState({ submited: true });
       // console.log("SubmitAnswer");
     }
+    fastItem = listForFast[Math.floor(Math.random() * Math.floor(8))];
   }
 
   async calculateResult() {
@@ -218,7 +220,7 @@ class DefaultName extends Component {
                   {
                     currentQuestion > 0 && !showResult && submited &&
                     <div className="playing-result-info">
-                      <div className="playing-fast-text">{listForFast[Math.floor(Math.random() * Math.floor(8))]}</div>
+                      <div className="playing-fast-text">{fastItem}</div>
 
                       <div className="bubbles">
                         <h1> Next Question: {questionTimeLeft > 0 && questionTimeLeft} </h1>
