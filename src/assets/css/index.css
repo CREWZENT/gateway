@@ -13,6 +13,10 @@ ul {
   list-style: none;
 }
 
+.btn {
+  font-family: google-san-bold;
+}
+
 .bd-navbar {
   min-height: 4rem;
   background-color: #2196f3;
@@ -665,22 +669,48 @@ ul {
 }
 
 .user-info {
-  width: 100%;
+  width: calc(100% - 74px);
   display: inline-block;
   margin-left: 15px;
   font-family: google-san-regular;
   font-weight: bold;
   color: #5f2d62;
-  margin-left: 15px;
 }
 
 .user-info-2 {
-  width: 100%;
+  width: calc(100% - 74px);
   display: inline-block;
   margin-left: 15px;
   font-family: google-san-regular;
   color: #5f2d62;
+}
+
+.user-info-3 {
+  width: 63px;
+  height: 84px;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  font-family: google-san-regular;
+  color: #5f2d62;
   margin-left: 15px;
+  position: absolute;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-top: -42px;
+  margin-left: -2px;
+  margin-right: -22px;
+  background-size: 60% 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+  font-family: google-san-regular;
+  color: #ffffff;
+  text-align: center;
+  padding-bottom: 13px;
 }
 
 .bubbles {

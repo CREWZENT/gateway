@@ -12,6 +12,10 @@ const db = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
 db.settings(settings);
 let countDownInterval;
+let rank1 = require('../assets/img/top_1.png');
+let rank2 = require('../assets/img/top_2.png');
+let rank3 = require('../assets/img/top_3.png');
+
 
 let listForFast = ['You are so fast!!!', 
                     'Fast and Furious 10 ???', 
@@ -174,6 +178,16 @@ class DefaultName extends Component {
     this.setState({ quizUsersList });
   }
 
+  getScoreIcon(index) {
+    if (index === 1) {
+      return rank1;
+    } else if (index === 2) {
+      return rank2;
+    } else {
+      return rank3;
+    }
+  }
+
   render() {
     const { showResult, quizId, submited, quizUsersList, completed, currentQuestion, questionText, questionTimeLeft, optionsList } = this.state;
     return (
@@ -205,6 +219,7 @@ class DefaultName extends Component {
                           <div className="user-infos">
                             <div className="user-info">{quizUser.displayName}</div>
                             <div className="user-info-2">Score: {quizUser.score} | Reward: {quizUser.reward/10**18}</div>
+                            <div className="user-info-3" style={{ 'backgroundImage': 'url(' + this.getScoreIcon(i+1) + ')'}} >{i + 1}</div>
                           </div>
                         </div>
                         
