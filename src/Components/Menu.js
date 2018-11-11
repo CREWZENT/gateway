@@ -47,7 +47,7 @@ class DefaultName extends Component {
             <div>
                 <nav className="navbar navbar-expand-lg navbar-dark bd-navbar">
                     <a className="navbar-brand" href="/">
-                        <img src="https://getbootstrap.com/docs/4.1/assets/brand/bootstrap-solid.svg" width="30" height="30" className="d-inline-block align-top mx-1" alt="" />
+                        <img src={require('../assets/img/home.png')} width="30" height="30" className="d-inline-block align-top mx-1" alt="" />
                     </a>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
@@ -84,7 +84,7 @@ class DefaultName extends Component {
                         }
                         {
                             state.user && state.user !== false &&
-                            <button className="btn btn-outline-primary my-2 mx-2" onClick={this.signOut}>Logout</button>
+                            <button className="btn btn-outline-primary my-2 mx-2" style={{ 'color': 'white' }} onClick={this.signOut}>Logout</button>
                         }
 
                     </div>

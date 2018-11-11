@@ -168,7 +168,7 @@ class DefaultName extends Component {
                  <p className="playing-room-id">{quizId}</p>
               </div>
            }
-              <div className="h-line-slim"/>
+              {/* <div className="h-line-slim"/> */}
               {
                 completed &&
                 <p className="text-center mt-2"><b>Quiz Completed</b></p>
@@ -179,7 +179,7 @@ class DefaultName extends Component {
                   {
                     quizUsersList.map((quizUser, i) => {
                       return (
-                        <div  key={i}>
+                        <div  key={i} className="user-list">
                         <div className="user">
                           <div className="user-avatar" style={{ 'background': 'url(' + quizUser.photoURL + '?width=64)'}}></div>
                           <div className="user-infos">
@@ -187,7 +187,7 @@ class DefaultName extends Component {
                             <div className="user-info-2">Score: {quizUser.score} | Reward: {quizUser.reward/10**18}</div>
                           </div>
                         </div>
-                        <div className="h-line-slim"/>
+                        {/* <div className="h-line-slim"/> */}
                         </div>
                       )
                     })
