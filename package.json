@@ -42,11 +42,5 @@
       "not op_mini all",
       "ie 11"
     ]
-  },
-  "devDependencies": {
-    "crypto": "^1.0.1",
-    "express": "^4.16.4",
-    "http": "0.0.0",
-    "https": "^1.0.0"
   }
 }
