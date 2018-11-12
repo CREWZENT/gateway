@@ -24,6 +24,12 @@ ul {
           box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 
+.bd-navbar .navbar-nav .nav-item.active a {
+  border: 1px solid #1976d2;
+  border-radius: 8px;
+  background: #1976d2;
+}
+
 .bd-navbar .navbar-nav .nav-link {
   padding-right: .5rem;
   padding-left: .5rem;
@@ -32,7 +38,7 @@ ul {
 }
 
 .bd-navbar .navbar-nav .nav-link.active, .bd-navbar .navbar-nav .nav-link:hover {
-  color: #fff;
+  color: #b2ebf2;
   background-color: transparent;
 }
 
