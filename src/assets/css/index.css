@@ -25,8 +25,9 @@ ul {
 }
 
 .bd-navbar .navbar-nav .nav-item.active a {
-  border: 1px solid #1565c0;
+  border: 1px solid #1976d2;
   border-radius: 8px;
+  background: #1976d2;
 }
 
 .bd-navbar .navbar-nav .nav-link {
