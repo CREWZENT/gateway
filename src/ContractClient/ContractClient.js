@@ -15,6 +15,9 @@ switch (localhost) {
   case '10.148.0.3':
     localhost = "35.240.249.169";
     break;
+  case '10.148.0.5':
+    localhost = "35.240.249.243";
+    break;
   default:
     break;
 }
