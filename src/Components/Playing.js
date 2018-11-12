@@ -12,6 +12,20 @@ const db = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
 db.settings(settings);
 let countDownInterval;
+let rank1 = require('../assets/img/top_1.png');
+let rank2 = require('../assets/img/top_2.png');
+let rank3 = require('../assets/img/top_3.png');
+
+
+let listForFast = ['You are so fast!!!', 
+                    'Fast and Furious 10 ???', 
+                    'Please wait another player...', 
+                    'Sometime random is better, right?',
+                    'Overconfident can destroy you!!',
+                    'You need to wait...dont sleep...zZZ',
+                    'Let see the time countdown!',
+                    'Dog Cat Pig Chicken!!!']
+let fastItem = listForFast[Math.floor(Math.random() * Math.floor(8))];
 
 class DefaultName extends Component {
 
@@ -127,6 +141,7 @@ class DefaultName extends Component {
       this.setState({ submited: true });
       // console.log("SubmitAnswer");
     }
+    fastItem = listForFast[Math.floor(Math.random() * Math.floor(8))];
   }
 
   async calculateResult() {
@@ -157,7 +172,20 @@ class DefaultName extends Component {
       quizUsersList.push(quizUser)
     }
 
+    quizUsersList.sort((a, b) => {
+      return b.score - a.score;
+    });
     this.setState({ quizUsersList });
+  }
+
+  getScoreIcon(index) {
+    if (index === 1) {
+      return rank1;
+    } else if (index === 2) {
+      return rank2;
+    } else {
+      return rank3;
+    }
   }
 
   render() {
@@ -167,13 +195,13 @@ class DefaultName extends Component {
         <div>
             <div>
               {
-                (currentQuestion === 0 || showResult || completed) &&
+                (currentQuestion === 0) &&
               <div className="playing-header"> 
                 <h1>PIN Code</h1> 
                  <p className="playing-room-id">{quizId}</p>
               </div>
               }
-              <div className="h-line-slim"/>
+              {/* <div className="h-line-slim"/> */}
               
                 {
                   completed && 'Completed'
@@ -182,17 +210,19 @@ class DefaultName extends Component {
                 (currentQuestion === 0 || showResult || completed) &&
                 <div>
                   {
-                    quizUsersList.map((quizUser, i) => {
+                    quizUsersList
+                        .map((quizUser, i) => {
                       return (
-                        <div key={i}>
+                        <div key={i} className="user-list">
                         <div className="user">
                           <div className="user-avatar" style={{ 'background': 'url(' + quizUser.photoURL + '?width=64)'}}></div>
                           <div className="user-infos">
                             <div className="user-info">{quizUser.displayName}</div>
                             <div className="user-info-2">Score: {quizUser.score} | Reward: {quizUser.reward/10**18}</div>
+                            <div className="user-info-3" style={{ 'backgroundImage': 'url(' + this.getScoreIcon(i+1) + ')'}} >{i + 1}</div>
                           </div>
                         </div>
-                        <div className="h-line-slim"/>
+                        
                         </div>
                       )
                     })
@@ -205,7 +235,7 @@ class DefaultName extends Component {
                   {
                     currentQuestion > 0 && !showResult && submited &&
                     <div className="playing-result-info">
-                      <div> You're too fast!!! </div>
+                      <div className="playing-fast-text">{fastItem}</div>
 
                       <div className="bubbles">
                         <h1> Next Question: {questionTimeLeft > 0 && questionTimeLeft} </h1>
@@ -220,7 +250,7 @@ class DefaultName extends Component {
                     <div>
                       <p className="current-question">Question {currentQuestion}</p>
                       <div className="question-text">{questionText} </div>
-                      <div className="h-line-slim"/>
+                      {/* <div className="h-line-slim"/> */}
                       <div className="question-time-left"> Time Left: {questionTimeLeft > 0 && questionTimeLeft} </div>
                       <div className= "question-container">
                         {

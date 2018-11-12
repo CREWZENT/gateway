@@ -11,6 +11,7 @@ let checkBubbles = setInterval(()=>{
 
 
 function startBubbles() {
+    console.log($('.bubbles').width());
     // Define a blank array for the effect positions. This will be populated based on width of the title.
     var bArray = [];
     // Define a size array, this will be used to vary bubble sizes

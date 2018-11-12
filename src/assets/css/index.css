@@ -13,9 +13,13 @@ ul {
   list-style: none;
 }
 
+.btn {
+  font-family: google-san-bold;
+}
+
 .bd-navbar {
   min-height: 4rem;
-  background-color: #563d7c;
+  background-color: #2196f3;
   -webkit-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
           box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
@@ -23,7 +27,8 @@ ul {
 .bd-navbar .navbar-nav .nav-link {
   padding-right: .5rem;
   padding-left: .5rem;
-  color: #cbbde2;
+  color: #ffffff;
+  font-family: google-san-bold;
 }
 
 .bd-navbar .navbar-nav .nav-link.active, .bd-navbar .navbar-nav .nav-link:hover {
@@ -246,9 +251,8 @@ ul {
 }
 
 .playing .board-question-1 {
-  margin: 45px;
   width: 100%;
-  height: 100px;
+  height: 130px;
   background-position: center;
   background-color: #28afac;
   background-size: contain;
@@ -270,9 +274,8 @@ ul {
 }
 
 .playing .board-question-2 {
-  margin: 45px;
   width: 100%;
-  height: 100px;
+  height: 130px;
   background-position: center;
   background-color: #d4546a;
   background-size: contain;
@@ -295,9 +298,8 @@ ul {
 }
 
 .playing .board-question-3 {
-  margin: 45px;
   width: 100%;
-  height: 100px;
+  height: 130px;
   background-position: center;
   background-color: #f49537;
   background-size: contain;
@@ -319,9 +321,8 @@ ul {
 }
 
 .playing .board-question-4 {
-  margin: 45px;
   width: 100%;
-  height: 100px;
+  height: 130px;
   background-position: center;
   background-color: #5376ad;
   background-size: contain;
@@ -398,6 +399,11 @@ ul {
   margin: 5px;
   margin-top: 10px;
   bottom: 0;
+}
+
+.playing .playing-fast-text {
+  font-size: 21px;
+  font-family: google-san-bold;
 }
 
 .board .playing-header {
@@ -621,17 +627,24 @@ ul {
 
 .user {
   width: calc(100% - 20px);
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  padding: 10px;
+  margin: 10px;
+  margin-bottom: 5px;
+  margin-left: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 5px;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -webkit-box-pack: left;
-      -ms-flex-pack: left;
-          justify-content: left;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   margin-bottom: 3px;
+  -webkit-box-shadow: 0.5px 0.5px 2px 1px #bdbdbd;
+          box-shadow: 0.5px 0.5px 2px 1px #bdbdbd;
+  border-radius: 5px;
+  background: #ffffff;
 }
 
 .user-avatar {
@@ -656,26 +669,52 @@ ul {
 }
 
 .user-info {
-  width: 100%;
+  width: calc(100% - 74px);
   display: inline-block;
   margin-left: 15px;
   font-family: google-san-regular;
   font-weight: bold;
   color: #5f2d62;
-  margin-left: 15px;
 }
 
 .user-info-2 {
-  width: 100%;
+  width: calc(100% - 74px);
   display: inline-block;
   margin-left: 15px;
   font-family: google-san-regular;
   color: #5f2d62;
+}
+
+.user-info-3 {
+  width: 63px;
+  height: 84px;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  font-family: google-san-regular;
+  color: #5f2d62;
   margin-left: 15px;
+  position: absolute;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-top: -42px;
+  margin-left: -2px;
+  margin-right: -22px;
+  background-size: 60% 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+  font-family: google-san-regular;
+  color: #ffffff;
+  text-align: center;
+  padding-bottom: 13px;
 }
 
 .bubbles {
-  width: 50%;
+  width: 100%;
   height: 100px;
   display: inline-block;
   font-family: arial;
@@ -684,14 +723,14 @@ ul {
 }
 
 .bubbles h1 {
-  margin-right: 50px;
+  width: 100%;
   position: fixed;
   bottom: 0px;
   font-family: Quicksand, cursive;
   font-size: 20px;
   color: #fff;
   z-index: 2;
-  text-align: right;
+  text-align: center;
 }
 
 .individual-bubble {
@@ -700,5 +739,15 @@ ul {
   bottom: 10px;
   background-color: #fff;
   z-index: 1;
+}
+
+.teneocto-site {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #f0f0f3;
+  background-size: cover;
 }
 /*# sourceMappingURL=index.css.map */
